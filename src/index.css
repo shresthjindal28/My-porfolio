@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=New+Amsterdam&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=New+Amsterdam&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html{
+    font-family: "New Amsterdam", sans-serif;
+    user-select: none;
+  }
+}
