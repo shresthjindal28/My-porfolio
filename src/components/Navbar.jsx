@@ -3,16 +3,7 @@ import { FaBars, FaTimes } from "react-icons/fa"
 import { Link } from 'react-scroll'
 
 const Navbar = () => {
-  let skillEl = null;
-  let aboutEl = null;
-  let contactEl = null;
     const [nav, setNav] = useState(false)
-    useEffect(() => {
-      skillEl = document.body.querySelector("#skill-link");
-      aboutEl = document.body.querySelector("#about-link");
-      contactEl = document.body.querySelector("#contact-link");
-      // console.log(skillEl);
-    }, []);
 
     const links = [
         {
@@ -23,7 +14,7 @@ const Navbar = () => {
         {
             id: 2,
 
-            link: 'About'
+            link: 'about'
         },
         {
             id: 3,
@@ -51,8 +42,7 @@ const Navbar = () => {
               skillEl?.scrollIntoView({
                 behavior: "smooth",
               });
-            }}><Link to='{link} smooth duration={300}'>{link}</Link>
-            {console.log(elementId)}
+            }}><Link to={id} smooth duration={300}>{link}</Link>
             </li>
         ))}
       </ul>

@@ -3,7 +3,7 @@ import Spline from '@splinetool/react-spline';
 
 const About = () => {
   return (
-    <div name="About" id='about-link' className='h-[80vh] lg:h-[100vh] max-w-screen-lg ml-4 md:mx-auto  flex items-center justify-center  md:justify-between'>
+    <div name="About" id='2' className='h-[80vh] lg:h-[100vh] max-w-screen-lg ml-4 md:mx-auto  flex items-center justify-center  md:justify-between'>
         <div className='absolute tracking-widest flex flex-col md:flex-wrap  md:flex-1 md:relative text-white'>
           <h1 className='text-3xl sm:text-6xl font-bold mb-4'>Hello I'm <br /> Shresth Jindal </h1>
           <p className=''>I'm a web developer proficient in the MERN stack and passionate about creating immersive 3D animation using Three.js, Spline, Venta.js. I specialized in building responsive, visually appealing web applications with Tailwind CSS. Let's create something amazing together!</p>

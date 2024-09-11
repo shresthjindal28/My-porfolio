@@ -19,7 +19,7 @@ const Skills = () => {
     {id:7, src:tailwind, title:"Tailwind", style:"hover:shadow-sky-400"}
   ]
   return (
-    <div name='skill' className="max-w-screen-lg mx-auto p-4 flex flex-col justify-center w-full h-full text-white">
+    <div id='3' name='skill' className="max-w-screen-lg mx-auto p-4 flex flex-col justify-center w-full h-full text-white">
       <div className=''>
       <h1 className='text-4xl font-bold border-b border-gray-500 p-2 inline' id="">Skills</h1>
       </div>
