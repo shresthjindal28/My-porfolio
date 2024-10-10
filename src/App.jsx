@@ -6,6 +6,7 @@ import Social from './components/Social'
 import About from './components/About'
 import Skills from './components/Skills'
 import Contact from './components/Contact'
+import { Analytics } from "@vercel/analytics/react"
 
 const App = () => {
   return (
