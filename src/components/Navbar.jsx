@@ -32,6 +32,12 @@ const Navbar = () => {
             link: 'Contact'
         },
     ];
+
+    const handleNavClick = () => {
+      setNav(!nav); // Toggles the navbar state
+    };
+
+
   return (
     <div name="Home" className='flex justify-between items-center w-full h-20 px-4 text-white bg-black'>
       <div className="">
@@ -58,8 +64,13 @@ const Navbar = () => {
 
       {nav && (
         <ul className='flex flex-col justify-center items-center absolute top-0 left-0 w-full h-screen bg-gradient-to-b from-black to-gray-500 text-gray-500'>
-          {links.map(({ id ,link }) => (
-            <li className='px-4 cursor-pointer capitalize py-6 text-4xl hover:text-white hover:scale-150'>{link}</li>
+          {links.map(({ id ,link,elementId }) => (
+            <li key={id} className='px-4 cursor-pointer capitalize py-6 text-4xl hover:text-white hover:scale-150' id={elementId}              
+            onClick={() => {
+              skillEl?.scrollIntoView({
+                behavior: "smooth",
+              });
+            }}><Link to={id} smooth duration={300} onClick={handleNavClick} >{link}</Link></li>
           ))}
         </ul>  
       )}
