@@ -12,7 +12,7 @@ const About = () => {
     >
       <div className="absolute tracking-widest flex flex-col md:flex-wrap md:flex-1 md:relative text-white">
         <h1 className="text-3xl sm:text-6xl font-bold mb-4">
-          Hello I'm <br /> Shresth Jindal
+          Hello I'm <br /> Shresth jindal
         </h1>
         <p>
           I'm a web developer proficient in the MERN stack and passionate about
