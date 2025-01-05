@@ -44,7 +44,7 @@ const projects = [
   },
   {
     id: 6,
-    title: "Drive Cone",
+    title: "Drive Clone",
     description:
       "Cloud storage application with file sharing capabilities, folder organization, and seamless synchronization across devices.",
     image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.nashdigital.co.za%2Fwp-content%2Fuploads%2F2020%2F02%2FGoogle-Drive-1308x654.jpg&f=1&nofb=1&ipt=b2b7a129d803c5d1e0d6fe6bf8113f931b417d91e2c335bae1369a7a622e1e2c&ipo=images",
