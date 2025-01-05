@@ -1,5 +1,6 @@
 import React, { Suspense, lazy, memo } from 'react';
 import Navbar from './components/Navbar';
+import Project from './components/Project';
 
 // Optimized lazy loading with prefetch
 const Home = lazy(() => import('./components/Home' /* webpackPrefetch: true */));
@@ -23,7 +24,7 @@ const Section = memo(({ id, children }) => (
 const App = memo(() => {
   return (
     <div className="bg-gray-900 text-white min-h-screen relative w-full h-full overflow-x-hidden">
-      <div className="fixed inset-0 z-0">
+      <div className="fixed inset-10 z-0">
         <Suspense fallback={<LoadingSpinner />}>
           <Model3D />
         </Suspense>
@@ -38,8 +39,8 @@ const App = memo(() => {
           <Section id="skills">
             <Skills />
           </Section>
-          <Section id="experience">
-            <Experience />
+          <Section id="projects">
+            <Project />
           </Section>
           <Section id="contact">
             <Contact />

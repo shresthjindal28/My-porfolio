@@ -80,11 +80,15 @@ const Home = () => {
           ref={elementRefs.cta}
           className="flex flex-wrap justify-center gap-4 mb-8"
         >
+          
           <a
-            href="#projects"
+            href="/Shresth-resume.pdf"
+            download
+            target="_blank"
+            rel="noopener noreferrer"
             className="bg-yellow-400 text-gray-900 px-8 py-3 rounded-full font-medium hover:bg-yellow-500 transition-colors duration-300"
           >
-            View My Work
+            Resume
           </a>
           <a
             href="#contact"

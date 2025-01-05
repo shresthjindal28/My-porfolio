@@ -64,6 +64,15 @@ const Navbar = () => {
               Skills
             </Link>
             <Link
+              to="projects"
+              spy={true}
+              smooth={true}
+              duration={500}
+              className="cursor-pointer hover:text-gray-300"
+            >
+              Projects
+            </Link>
+            <Link
               to="contact"
               spy={true}
               smooth={true}
@@ -71,15 +80,6 @@ const Navbar = () => {
               className="cursor-pointer hover:text-gray-300"
             >
               Contact
-            </Link>
-            <Link
-              to="Projects"
-              spy={true}
-              smooth={true}
-              duration={500}
-              className="cursor-pointer hover:text-gray-300"
-            >
-              Projects
             </Link>
           </div>
         </div>
