@@ -82,7 +82,7 @@ const Home = () => {
         >
           
           <a
-            href="/Shresth-resume.pdf"
+            href="/shresth_jinadl_resume.pdf"
             download
             target="_blank"
             rel="noopener noreferrer"
