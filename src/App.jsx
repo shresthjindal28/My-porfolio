@@ -1,6 +1,7 @@
 import React, { Suspense, lazy, memo } from 'react';
 import Navbar from './components/Navbar';
 import Project from './components/Project';
+import Work from './components/Work';
 
 // Optimized lazy loading with prefetch
 const Home = lazy(() => import('./components/Home' /* webpackPrefetch: true */));
@@ -41,6 +42,9 @@ const App = memo(() => {
           </Section>
           <Section id="projects">
             <Project />
+          </Section>
+          <Section id="work">
+            <Work />
           </Section>
           <Section id="contact">
             <Contact />

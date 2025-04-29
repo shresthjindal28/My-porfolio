@@ -64,6 +64,15 @@ const Navbar = () => {
               Skills
             </Link>
             <Link
+              to="work"
+              spy={true}
+              smooth={true}
+              duration={500}
+              className="cursor-pointer hover:text-gray-300"
+            >
+              Work Experience
+            </Link>
+            <Link
               to="projects"
               spy={true}
               smooth={true}

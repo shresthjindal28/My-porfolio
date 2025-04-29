@@ -28,6 +28,7 @@
     "react-scroll": "^1.9.0",
     "react-three-fiber": "^6.0.13",
     "react-to-print": "^3.0.4",
+    "react-vertical-timeline-component": "^3.5.3",
     "three": "^0.153.0"
   },
   "devDependencies": {
