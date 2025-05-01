@@ -43,7 +43,7 @@ const ExperienceCard = ({ experience }) => (
       borderRadius: '6px',
       boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
       border: '1px solid #233554',
-      padding: '1.5rem',
+      padding: window.innerWidth < 768 ? '1rem' : '1.5rem',
     }}
     contentArrowStyle={{ borderRight: '7px solid #112240' }}
     date={experience.date}
@@ -54,19 +54,19 @@ const ExperienceCard = ({ experience }) => (
     }}
     icon={experience.icon}
   >
-    <div className="mb-3">
+    <div className="mb-2 sm:mb-3">
       <div>
-        <h3 className='text-gray-100 text-xl sm:text-2xl font-bold'>{experience.title}</h3>
-        <p className='text-[#E63946] text-lg font-semibold' style={{ margin: 0 }}>
+        <h3 className='text-gray-100 text-lg sm:text-xl md:text-2xl font-bold'>{experience.title}</h3>
+        <p className='text-[#E63946] text-base sm:text-lg font-semibold' style={{ margin: 0 }}>
           {experience.company_name}
         </p>
       </div>
     </div>
-    <ul className='mt-4 list-disc ml-5 space-y-2'>
+    <ul className='mt-2 sm:mt-4 list-disc ml-4 sm:ml-5 space-y-1 sm:space-y-2'>
       {experience.points.map((point, pointIndex) => (
         <li
           key={`experience-point-${pointIndex}`}
-          className='text-[#a8b2d1] text-sm sm:text-base pl-1 tracking-wide'
+          className='text-[#a8b2d1] text-xs sm:text-sm md:text-base pl-1 tracking-wide'
         >
           {point}
         </li>
@@ -76,17 +76,31 @@ const ExperienceCard = ({ experience }) => (
 );
 
 const Work = () => {
+  // Add state to track screen width
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
-    <div name='work' className='w-full min-h-screen bg-transparent text-gray-300 py-20 md:py-24'>
+    <div name='work' className='w-full min-h-screen bg-transparent text-gray-300 py-16 md:py-24'>
       <div className='max-w-[1000px] mx-auto p-4 flex flex-col justify-center w-full h-full'>
-        <div className='pb-8 text-center'>
-          <p className='text-4xl sm:text-5xl font-bold inline border-b-4 border-[#E63946] text-gray-100'>
+        <div className='pb-4 sm:pb-8 text-center'>
+          <p className='text-3xl sm:text-4xl md:text-5xl font-bold inline border-b-4 border-[#E63946] text-gray-100'>
             Work Experience
           </p>
-          <p className='py-6 text-lg text-gray-400'>// My professional journey.</p>
+          <p className='py-3 sm:py-6 text-base sm:text-lg text-gray-400'>// My professional journey.</p>
         </div>
-        <div className="mt-10">
-          <VerticalTimeline lineColor={'#233554'}>
+        <div className="mt-6 sm:mt-10">
+          <VerticalTimeline 
+            lineColor={'#233554'}
+            animate={!isMobile} // Disable animations on mobile for better performance
+            className={isMobile ? 'vertical-timeline-custom-mobile' : ''}
+          >
             {workExperience.map((experience, index) => (
               <ExperienceCard key={index} experience={experience} />
             ))}

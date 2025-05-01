@@ -12,7 +12,7 @@ const Experience = lazy(() => import('./components/Project' /* webpackPrefetch: 
 
 const LoadingSpinner = memo(() => (
   <div className="flex items-center justify-center h-screen">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-blue-500"></div>
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-teal-400"></div> {/* Changed border color */}
   </div>
 ));
 
@@ -24,13 +24,13 @@ const Section = memo(({ id, children }) => (
 
 const App = memo(() => {
   return (
-    <div className="bg-gray-900 text-white min-h-screen relative w-full h-full overflow-x-hidden">
-      <div className="fixed inset-10 z-0">
+    <div className="text-white min-h-screen relative w-full h-full overflow-x-hidden bg-gray-950"> {/* Changed background */}
+      {/* <div className="fixed inset-10 z-0">
         <Suspense fallback={<LoadingSpinner />}>
           <Model3D />
         </Suspense>
-      </div>
-      <div className="fixed inset-0 z-10 bg-gray-900/70" />
+      </div> */}
+      <div className="fixed inset-0 z-10 bg-black/60 " /> {/* Adjusted overlay */}
       <div className="relative z-20">
         <Navbar />
         <Suspense fallback={<LoadingSpinner />}>
