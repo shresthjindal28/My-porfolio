@@ -291,23 +291,19 @@ function SkillsModel({ skills, onSkillSelect, activeSkill, hoveredSkill, setHove
   );
 }
 
-// Main component for the 3D skills visualization - improved responsiveness
-export default function Skill3D({ skills = [], height = '80vh' }) {
+// Main component for the 3D skills visualization - simplified
+export default function Skill3D({ skills = [], onSkillSelect }) {
   const [activeSkill, setActiveSkill] = useState(null);
   const [hoveredSkill, setHoveredSkill] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [orientation, setOrientation] = useState('portrait');
   const [allowScroll, setAllowScroll] = useState(false);
-  const containerRef = useRef(null);
   const canvasContainerRef = useRef(null);
   
-  // Enhanced responsive design handling with orientation detection
+  // Enhanced responsive design handling
   useEffect(() => {
     const checkResponsiveness = () => {
       const width = window.innerWidth;
-      const height = window.innerHeight;
       setIsMobile(width < 768);
-      setOrientation(width > height ? 'landscape' : 'portrait');
     };
     
     checkResponsiveness();
@@ -321,84 +317,36 @@ export default function Skill3D({ skills = [], height = '80vh' }) {
     
     const container = canvasContainerRef.current;
     
-    // When user starts interacting with the 3D model
     const handleTouchStart = (e) => {
-      // Only if we're actually touching the canvas (not details panel)
       if (e.target.tagName.toLowerCase() === 'canvas') {
         setAllowScroll(false);
       }
     };
     
-    // When user stops interacting with the 3D model
     const handleTouchEnd = () => {
-      // Small delay to ensure the interaction is complete
       setTimeout(() => setAllowScroll(true), 300);
     };
     
     container.addEventListener('touchstart', handleTouchStart);
     container.addEventListener('touchend', handleTouchEnd);
     
-    // Enable scrolling when component unmounts
     return () => {
       container.removeEventListener('touchstart', handleTouchStart);
       container.removeEventListener('touchend', handleTouchEnd);
     };
   }, [isMobile]);
-
-  // Update skill display based on hover or selection
-  const displayedSkill = activeSkill || hoveredSkill;
-
-  // Calculate appropriate height based on device and orientation
-  const getContainerStyle = () => {
-    if (isMobile) {
-      return {
-        height: orientation === 'landscape' ? '100vh' : 'auto',
-        minHeight: orientation === 'landscape' ? '300px' : '650px', // Increased height for portrait
-        maxHeight: orientation === 'landscape' ? '100vh' : '90vh',  // Increased max height
-      };
-    }
-    return { 
-      height: 'min(75vh, 650px)'
-    };
-  };
+  
+  // Update parent component when skill selection changes
+  useEffect(() => {
+    onSkillSelect && onSkillSelect(activeSkill || hoveredSkill);
+  }, [activeSkill, hoveredSkill, onSkillSelect]);
 
   return (
-    <div
-      ref={containerRef}
-      className={`
-        w-full relative rounded-2xl overflow-hidden bg-transparent 
-        flex ${isMobile && orientation === 'portrait' ? 'flex-col' : 'flex-col md:flex-row'} 
-        items-center justify-center md:justify-between
-        py-2 md:py-4 gap-2 md:gap-4 lg:gap-6
-      `}
-      style={getContainerStyle()}
-    >
-      {/* Detail panel - responsive positioning */}
-      <div className={`
-        ${isMobile 
-          ? orientation === 'landscape' 
-            ? 'w-[40%] h-[90%] absolute left-2 z-20' 
-            : 'w-[90%] h-[180px] z-10 mt-[70%] sm:mt-[60%]' // Adjusted position for detail panel
-          : 'w-[35%] lg:w-[25%] h-[80%] max-h-[450px]'
-        }
-        min-w-[250px] max-w-[350px]
-        transition-all duration-300
-      `}>
-        <DetailCard skill={displayedSkill} isMobile={isMobile} />
-      </div>
-      
-      {/* 3D visualization - responsive sizing */}
+    <div className="w-full h-full relative">
+      {/* 3D visualization - takes full container space */}
       <div 
         ref={canvasContainerRef}
-        className={`
-          ${isMobile 
-            ? orientation === 'landscape' 
-              ? 'w-[100%] h-[100%] ml-auto' 
-              : 'w-full h-[450px] sm:h-[500px] absolute top-0' // Increased height significantly
-            : 'w-[60%] lg:w-[70%] xl:w-[40%] h-full'
-          }
-          flex items-center justify-center
-        `}
+        className="w-full h-full"
         style={{ 
           pointerEvents: allowScroll ? 'none' : 'auto',
           touchAction: allowScroll ? 'auto' : 'none'
@@ -414,13 +362,11 @@ export default function Skill3D({ skills = [], height = '80vh' }) {
           gl={{ 
             alpha: true, 
             antialias: true,
-            preserveDrawingBuffer: true,
             powerPreference: isMobile ? "default" : "high-performance"
           }}
           dpr={isMobile ? [1, 1.5] : [1, 2]}
-          className="bg-transparent w-full h-full"
+          className="w-full h-full"
         >
-          {/* Optimized lighting for mobile */}
           <ambientLight intensity={0.6} />
           <directionalLight position={[5, 5, 5]} intensity={0.7} color="#ffffff" />
           {!isMobile && (
@@ -448,7 +394,8 @@ export default function Skill3D({ skills = [], height = '80vh' }) {
             rotateSpeed={isMobile ? 0.7 : 0.5}
             enableDamping={true}
             dampingFactor={0.1}
-            autoRotate={false}
+            autoRotate={true}
+            autoRotateSpeed={0.5}
             makeDefault
           />
         </Canvas>

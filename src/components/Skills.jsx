@@ -8,10 +8,133 @@ gsap.registerPlugin(ScrollTrigger);
 const deviconUrl = (name, type = 'original') => 
   `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${name}/${name}-${type}.svg`;
 
+// Category color mapping
+const categoryColors = {
+  'Frontend': '#38bdf8',    // bright blue
+  'Backend': '#a78bfa',     // vibrant purple
+  'Programming': '#fb923c', // vibrant orange
+  'Database': '#4ade80',    // vibrant green
+  'DevOps': '#f472b6',      // vibrant pink
+  'Tools': '#818cf8',       // vibrant indigo
+  'Design': '#fb7185',      // vibrant rose
+  'Graphics': '#2dd4bf',    // vibrant teal
+  'Animation': '#e879f9',   // vibrant fuchsia
+  'Integration': '#0ea5e9'  // vibrant sky blue
+};
+
+// Detail card component moved from Skill3D.jsx
+function DetailCard({ skill, isMobile }) {
+  // Animation ref for proficiency bar
+  const barRef = useRef(null);
+  
+  // Animate proficiency bar when skill changes
+  useEffect(() => {
+    if (skill && barRef.current) {
+      barRef.current.style.width = '0%';
+      setTimeout(() => {
+        barRef.current.style.width = `${skill.proficiency}%`;
+      }, 50);
+    }
+  }, [skill]);
+  
+  // Helper function to validate icon URLs (moved from Skill3D)
+  const getValidIconUrl = (url) => {
+    const FALLBACK_ICON = 'https://img.icons8.com/ios/50/code--v1.png';
+    if (
+      typeof url !== 'string' ||
+      url.trim() === '' ||
+      !(url.endsWith('.svg') || url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.jpeg') || url.startsWith('data:image'))
+    ) {
+      return FALLBACK_ICON;
+    }
+    return url;
+  };
+  
+  return (
+    <div
+      className={`
+        bg-slate-900/95 rounded-xl ${isMobile ? 'p-2.5' : 'p-4'} 
+        shadow-xl backdrop-blur-md w-full
+        flex flex-col items-center justify-between transition-all duration-300
+        ${skill ? 'opacity-100 scale-100' : 'opacity-90 scale-98'} 
+        ${isMobile ? 'text-xs' : 'text-sm'} text-white
+      `}
+      style={{
+        border: skill ? `2px solid ${categoryColors[skill.category] || '#38bdf8'}` : '1px solid rgba(56, 189, 248, 0.3)'
+      }}
+    >
+      {skill ? (
+        <>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="bg-slate-900/70 rounded-lg p-2 flex items-center justify-center shadow-md"
+                 style={{ border: `1px solid ${categoryColors[skill.category] || '#38bdf8'}` }}>
+              <img 
+                src={getValidIconUrl(skill.icon)} 
+                alt={skill.name}
+                className={`${isMobile ? 'w-8 h-8' : 'w-10 h-10'} filter drop-shadow`}
+              />
+            </div>
+            <div>
+              <h3 className={`${isMobile ? 'text-base' : 'text-xl'} font-bold leading-tight m-0`}
+                  style={{ color: categoryColors[skill.category] || '#38bdf8' }}>
+                {skill.name}
+              </h3>
+              <span className="text-xs text-slate-400 block mt-0.5">
+                {skill.category}
+              </span>
+            </div>
+          </div>
+          <div className={`${isMobile ? 'text-xs' : 'text-sm'} leading-normal`}>
+            <p className="m-0 mb-2.5">{skill.description}</p>
+            
+            {/* Proficiency indicator with animation */}
+            {skill.proficiency && (
+              <div className="mt-2">
+                <div className="flex justify-between mb-1 text-xs">
+                  <span>Proficiency</span>
+                  <span style={{ color: categoryColors[skill.category] || '#38bdf8' }}>
+                    {skill.proficiency}%
+                  </span>
+                </div>
+                <div className="h-1.5 w-full bg-slate-800/80 rounded overflow-hidden">
+                  <div 
+                    ref={barRef}
+                    className="h-full transition-all duration-1000 ease-out"
+                    style={{ 
+                      width: 0, 
+                      backgroundColor: categoryColors[skill.category] || '#38bdf8',
+                      boxShadow: `0 0 10px ${categoryColors[skill.category] || '#38bdf8'}`
+                    }} 
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </>
+      ) : (
+        <div className="text-center py-2.5 flex flex-col justify-center">
+          <h3 className="text-sky-400 mb-2 text-base">Interactive Skills Map</h3>
+          <p className="text-xs leading-relaxed text-slate-400 m-0 mb-2">
+            {isMobile 
+              ? 'Tap on any skill bubble to see details.' 
+              : 'Hover over any skill bubble to see details, or click to pin it.'}
+          </p>
+          <div className="mt-2 p-2 rounded-md bg-sky-400/10 border border-dashed border-sky-400/30 text-xs">
+            <p className="m-0 text-slate-400">
+              Use your {isMobile ? 'finger' : 'mouse'} to rotate the model
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function SkillsSection() {
   const sectionRef = useRef(null);
   const [activeCategory, setActiveCategory] = useState('All');
   const [isMobileView, setIsMobileView] = useState(false);
+  const [displayedSkill, setDisplayedSkill] = useState(null);
   
   // Check for mobile view
   useEffect(() => {
@@ -175,13 +298,9 @@ export default function SkillsSection() {
           <h2 className="heading-main text-3xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-3 text-white">
             My <span className="text-emerald-400">Skills</span>
           </h2>
-          <p className="heading-sub text-slate-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-2">
-            I've developed expertise in various technologies across the full-stack spectrum,
-            with a focus on building performant, user-friendly web applications.
-          </p>
         </div>
         
-        {/* Category filters - improved for touch and mobile */}
+        {/* Category filters */}
         <div className="category-filters flex flex-wrap justify-center gap-1 sm:gap-1.5 md:gap-2 mb-3 md:mb-5 px-1 sm:px-0">
           {categories.map((category, index) => (
             <button
@@ -201,44 +320,30 @@ export default function SkillsSection() {
           ))}
         </div>
         
-        {/* Skills count indicator - more compact */}
-        <div className="skills-counter text-center text-slate-400 mb-2 md:mb-4 flex flex-wrap items-center justify-center gap-1 sm:gap-2">
-          <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-transparent rounded-full text-xs font-medium">
-            Showing {filteredSkills.length} of {allSkills.length} skills
-          </span>
-          {activeCategory !== 'All' && (
-            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-slate-800/50 rounded-full text-xs font-medium">
-              Category: <span className="text-emerald-400">{activeCategory}</span>
-            </span>
-          )}
-        </div>
-        
-        {/* 3D Skills Visualization - optimized for different devices */}
-        <div className="cube-container mb-3 md:mb-5">
-          <Skill3D 
-            skills={filteredSkills} 
-            height={isMobileView ? '420px' : '65vh'} 
-          />
-        </div>
-        
-        {/* Instructions for better UX - made more concise */}
-        <div className="text-center mb-3 md:mb-5">
-          <span className="inline-block px-2 sm:px-3 py-1 sm:py-1.5 bg-slate-800/70 rounded-full text-xs text-slate-300">
-            <span className="hidden sm:inline">👆 </span>
-            {isMobileView 
-              ? "Tap bubbles to see details" 
-              : "Hover over bubbles to see details, click to pin"}
-          </span>
-        </div>
-        
-        {/* Footer text - more compact */}
-        <div className="skills-footer text-center text-gray-300 max-w-2xl mx-auto bg-slate-800/30 p-2 sm:p-3 md:p-4 rounded-xl">
-          <p className="text-xs sm:text-sm md:text-base mb-1">
-            These are the technologies I've worked with to build web applications and solve complex problems.
-          </p>
-          <p className="text-xs text-slate-400">
-            The interactive 3D visualization shows my key skills and their proficiency levels.
-          </p>
+        {/* New layout with 3D model and card side by side */}
+        <div className="flex flex-col lg:flex-row items-center justify-between">
+          {/* 3D Model Side */}
+          <div className="w-full h-[40vh] sm:h-[45vh] md:h-[50vh] lg:h-[60vh] lg:w-1/2 relative flex items-center justify-center">
+            <Skill3D 
+              skills={filteredSkills}
+              onSkillSelect={setDisplayedSkill}
+            />
+          </div>
+          
+          {/* Card Side */}
+          <div className="w-full lg:w-2/5 mt-6 lg:mt-0">
+            <DetailCard skill={displayedSkill} isMobile={isMobileView} />
+            
+            {/* Instructions - now on the card side */}
+            <div className="text-center lg:text-left mt-3 md:mt-5">
+              <span className="inline-block px-2 sm:px-3 py-1 sm:py-1.5 bg-slate-800/70 rounded-full text-xs text-slate-300">
+                <span className="hidden sm:inline">👆 </span>
+                {isMobileView 
+                  ? "Tap bubbles to see details" 
+                  : "Hover over bubbles to see details, click to pin"}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
