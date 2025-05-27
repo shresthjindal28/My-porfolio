@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import  { useState, useRef, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
 
@@ -104,7 +104,7 @@ const ContactForm = () => {
             transition={{ delay: 0.2 }}
             className="text-4xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-600"
           >
-            Let's Connect
+            Let&#39;s Connect
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0 }}

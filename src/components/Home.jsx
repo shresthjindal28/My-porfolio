@@ -1,150 +1,156 @@
 // src/components/Home.jsx
-import React, { useEffect, useRef } from "react";
-import { gsap } from "gsap";
+import  { useRef, Suspense } from "react";
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import Home3DModel from './Home3DModel';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Link } from 'react-scroll';
+
+// Fallback component for 3D model
+const ModelFallback = () => (
+  <div className="w-full h-full flex items-center justify-center">
+    <div className="text-primary animate-pulse text-center">
+      <div className="w-24 h-24 border-4 border-t-primary border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <p className="text-sm">Loading 3D Model...</p>
+    </div>
+  </div>
+);
 
 const Home = () => {
-  const elementRefs = {
-    header: useRef(),
-    subHeader: useRef(),
-    description: useRef(),
-    cta: useRef(),
-    social: useRef(),
-  };
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({ 
+    target: containerRef, 
+    offset: ["start start", "end start"] 
+  });
 
-  useEffect(() => {
-    const ctaButtons = gsap.utils.toArray(elementRefs.cta.current.children);
-    const socialIcons = gsap.utils.toArray(elementRefs.social.current.children);
-
-    gsap.set(
-      [
-        elementRefs.header.current,
-        elementRefs.subHeader.current,
-        elementRefs.description.current,
-        ctaButtons,
-        socialIcons,
-      ],
-      { opacity: 0 }
-    );
-
-    const tl = gsap.timeline({ defaults: { ease: "power3.out", duration: 0.8 } });
-
-    tl.fromTo(elementRefs.header.current, 
-        { y: -50, opacity: 0, scale: 0.8 }, 
-        { y: 0, opacity: 1, scale: 1, duration: 1 }
-      )
-      .fromTo(elementRefs.subHeader.current, 
-        { y: -30, opacity: 0 }, 
-        { y: 0, opacity: 1 }, 
-        "-=0.7"
-      ) 
-      .fromTo(elementRefs.description.current, 
-        { x: -50, opacity: 0 }, 
-        { x: 0, opacity: 1 }, 
-        "-=0.6"
-      )
-      .fromTo(ctaButtons, 
-        { y: 30, opacity: 0, scale: 0.9 }, 
-        { y: 0, opacity: 1, scale: 1, stagger: 0.2 }, 
-        "-=0.5"
-      ) 
-      .fromTo(socialIcons, 
-        { y: 20, opacity: 0 }, 
-        { y: 0, opacity: 1, stagger: 0.15 }, 
-        "-=0.6"
-      ); 
-      
-  }, []);
-
+  // Parallax effect values
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, 300]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, 150]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  
   return (
-    <div className="relative min-h-screen flex flex-col lg:flex-row items-center justify-center px-4 overflow-hidden bg-transparent">
+    <div 
+      ref={containerRef} 
+      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
+    >
+      {/* Geometric background elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-secondary/5 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-screen bg-gradient-radial from-dark-700/20 to-transparent" />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
+        {/* 3D Model Container - only show on larger screens */}
+        <motion.div
+          style={{ y: y1, opacity }}
+          className="w-full lg:w-1/2 order-2 lg:order-1 mt-8 lg:mt-0 flex items-center justify-center"
+        >
+          <div className="w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] md:w-[400px] md:h-[400px] relative">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 blur-md animate-pulse" />
+            <div className="absolute inset-3 rounded-full bg-dark-800 border border-dark-600" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Suspense fallback={<ModelFallback />}>
+                <Home3DModel />
+              </Suspense>
+            </div>
+          </div>
+        </motion.div>
+        
+        {/* Hero Text Content */}
+        <motion.div
+          style={{ y: y2, opacity }}
+          className="w-full lg:w-1/2 order-1 lg:order-2 text-center lg:text-left"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mb-2 text-primary font-mono"
+          >
+            Hi there, my name is
+          </motion.div>
+          
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4"
+          >
+            <span className="block text-gray-100">Shresth Jindal</span>
+            <span className="block mt-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent animate-gradient">
+              Full Stack Developer
+            </span>
+          </motion.h1>
+          
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="text-dark-200 text-lg md:text-xl max-w-lg mx-auto lg:mx-0 mb-8"
+          >
+            I build interactive, accessible, and responsive web applications with modern technologies. 
+            Specializing in the MERN stack and passionate about creating exceptional digital experiences.
+          </motion.p>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+            className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8"
+          >
+            <a
+              href="/shresth_jindal_resume.pdf"
+              download
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+            >
+              Download Resume
+            </a>
+            
+            <Link
+              to="projects"
+              spy={true}
+              smooth={true}
+              duration={800}
+              offset={-80}
+              className="btn-outline"
+            >
+              View Projects
+            </Link>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.9 }}
+            className="flex justify-center lg:justify-start space-x-5"
+          >
+            {[
+              { icon: <FaGithub />, url: "https://github.com/shresthjindal28", label: "GitHub" },
+              { icon: <FaLinkedin />, url: "https://www.linkedin.com/in/shresth-jindal-b074ba28b", label: "LinkedIn" },
+              { icon: <FaTwitter />, url: "https://x.com/shresth_ji76019", label: "Twitter" }
+            ].map((social, index) => (
+              <motion.a
+                key={social.label}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.label}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.9 + (index * 0.1) }}
+                className="w-10 h-10 rounded-full flex items-center justify-center text-dark-200 border border-dark-500 bg-dark-700 hover:bg-dark-600 hover:text-primary hover:border-primary transition-all duration-300"
+              >
+                {social.icon}
+              </motion.a>
+            ))}
+          </motion.div>
+        </motion.div>
+      </div>
       
-      {/* Text Content Section */}
-      <div className="w-full lg:w-1/2 max-w-3xl lg:max-w-none lg:mr-8 text-center lg:text-left relative z-10 py-8 sm:py-10 lg:py-0 flex flex-col justify-center">
-        {/* Main Heading */}
-        <h1 
-          ref={elementRefs.header}
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-1 sm:mb-2"
-        >
-          Hi, I'm <span className="text-yellow-400">Shresth Jindal</span>
-        </h1>
-        {/* Sub Heading */}
-        <span 
-          ref={elementRefs.subHeader}
-          className="block text-xl sm:text-2xl md:text-3xl text-gray-400 mb-4 sm:mb-6"
-        >
-          Full Stack Developer & UI/UX Enthusiast
-        </span>
-
-        {/* Description */}
-        <p 
-          ref={elementRefs.description}
-          className="text-base sm:text-lg md:text-xl text-gray-200 mb-6 sm:mb-8 leading-relaxed px-2 sm:px-0"
-        >
-          Passionate about crafting <span className="text-yellow-300 font-medium">seamless digital experiences</span>. 
-          Expertise in MERN stack, Next.js, and cloud solutions. Let's build something amazing together.
-        </p>
-        <div 
-          ref={elementRefs.cta}
-          className="flex flex-wrap justify-center lg:justify-start gap-3 sm:gap-4 mb-6 sm:mb-8"
-        >
-          <a
-            href="/shresth_jinadl_resume.pdf"
-            download
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-yellow-400 text-gray-900 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-medium hover:bg-yellow-500 transition-colors duration-300 transform hover:scale-105 text-sm sm:text-base"
-          >
-            Resume
-          </a>
-          <a
-            href="#contact"
-            className="border-2 border-yellow-400 text-yellow-400 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-medium hover:bg-yellow-400 hover:text-gray-900 transition-colors duration-300 transform hover:scale-105 text-sm sm:text-base"
-          >
-            Contact Me
-          </a>
-        </div>
-
-        {/* Social Links - more touch-friendly */}
-        <div 
-          ref={elementRefs.social}
-          className="flex justify-center lg:justify-start space-x-6 sm:space-x-8"
-        >
-          <a 
-            href="https://github.com/shresthjindal28" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-yellow-400 transition-colors duration-300 transform hover:scale-110 p-1.5 sm:p-2"
-            aria-label="GitHub Profile"
-          >
-            <FaGithub size={24} />
-          </a>
-          <a 
-            href="https://www.linkedin.com/in/shresth-jindal-b074ba28b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-yellow-400 transition-colors duration-300 transform hover:scale-110 p-1.5 sm:p-2"
-            aria-label="LinkedIn Profile"
-          >
-            <FaLinkedin size={24} />
-          </a>
-          <a 
-            href="https://x.com/shresth_ji76019?t=4w7wPZQNHUNEfCmmGxT7vg&s=08" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-yellow-400 transition-colors duration-300 transform hover:scale-110 p-1.5 sm:p-2"
-            aria-label="Twitter Profile"
-          >
-            <FaTwitter size={24} />
-          </a>
-        </div>
-      </div>
-
-      {/* 3D Canvas Section - improved responsive sizing */}
-      <div className="w-full h-[40vh] sm:h-[45vh] md:h-[50vh] lg:h-screen lg:w-1/2 relative mt-4 sm:mt-6 lg:mt-0 flex items-center justify-center"> 
-         <Home3DModel /> 
-      </div>
 
     </div>
   );

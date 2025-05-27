@@ -1,61 +1,137 @@
-import React, { Suspense, lazy, memo } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
-import Project from './components/Project';
-import Work from './components/Work';
 
-// Optimized lazy loading with prefetch
-const Home = lazy(() => import('./components/Home' /* webpackPrefetch: true */));
-const Skills = lazy(() => import('./components/Skills' /* webpackPrefetch: true */));
-const Contact = lazy(() => import('./components/Contact' /* webpackPrefetch: true */));
-const Model3D = lazy(() => import('./components/Model3D' /* webpackPrefetch: true */));
-const Experience = lazy(() => import('./components/Project' /* webpackPrefetch: true */));
+// Lazy load components
+const Home = lazy(() => import('./components/Home'));
+const Skills = lazy(() => import('./components/Skills'));
+const Project = lazy(() => import('./components/Project'));
+const Work = lazy(() => import('./components/Work'));
+const Contact = lazy(() => import('./components/Contact'));
+const Model3D = lazy(() => import('./components/Model3D'));
 
-const LoadingSpinner = memo(() => (
-  <div className="flex items-center justify-center h-screen">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-teal-400"></div> {/* Changed border color */}
-  </div>
-));
-
-const Section = memo(({ id, children }) => (
-  <section id={id} className="w-full h-full">
-    {children}
-  </section>
-));
-
-const App = memo(() => {
-  return (
-    <div className="text-white min-h-screen relative w-full h-full overflow-x-hidden bg-gray-950"> {/* Changed background */}
-      {/* <div className="fixed inset-10 z-0">
-        <Suspense fallback={<LoadingSpinner />}>
-          <Model3D />
-        </Suspense>
-      </div> */}
-      <div className="fixed inset-0 z-10 bg-black/60 " /> {/* Adjusted overlay */}
-      <div className="relative z-20">
-        <Navbar />
-        <Suspense fallback={<LoadingSpinner />}>
-          <Section id="home">
-            <Home />
-          </Section>
-          <Section id="skills">
-            <Skills />
-          </Section>
-          <Section id="projects">
-            <Project />
-          </Section>
-          <Section id="work">
-            <Work />
-          </Section>
-          <Section id="contact">
-            <Contact />
-          </Section>
-        </Suspense>
+// Main loading screen
+const LoadingScreen = () => (
+  <div className="fixed inset-0 flex items-center justify-center bg-dark-800 z-50">
+    <div className="flex flex-col items-center">
+      <div className="w-16 h-16 relative">
+        <div className="absolute inset-0 border-4 border-t-primary border-r-transparent border-b-secondary border-l-transparent rounded-full animate-spin"></div>
       </div>
+      <p className="mt-4 text-primary font-medium">Loading Portfolio...</p>
     </div>
-  );
-});
+  </div>
+);
 
-LoadingSpinner.displayName = 'LoadingSpinner';
-Section.displayName = 'Section';
-App.displayName = 'App';
+// Component loading spinner
+const SectionLoader = () => (
+  <div className="flex items-center justify-center min-h-[50vh]">
+    <div className="w-10 h-10 border-2 border-t-primary border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+  </div>
+);
+
+const Section = ({ id, className, children }) => (
+  <motion.section
+    id={id}
+    className={`py-16 md:py-24 w-full ${className || ''}`}
+    initial={{ opacity: 0 }}
+    whileInView={{ opacity: 1 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.6 }}
+  >
+    {children}
+  </motion.section>
+);
+
+// Error boundary for 3D model
+class Model3DErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    console.error("3D Model error:", error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return null; // Silently fail to not disrupt UI
+    }
+    return this.props.children;
+  }
+}
+
+const App = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading resources
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <>
+      {isLoading ? (
+        <LoadingScreen />
+      ) : (
+        <div className="text-white min-h-screen relative w-full overflow-x-hidden bg-dark-800">
+          {/* Background 3D model - only render on desktop */}
+          <div className="fixed inset-0 z-0 pointer-events-none hidden lg:block">
+            <Model3DErrorBoundary>
+              <Suspense fallback={null}>
+                <Model3D />
+              </Suspense>
+            </Model3DErrorBoundary>
+          </div>
+          
+          {/* Overlay gradient to improve contrast with background */}
+          <div className="fixed inset-0 z-0 bg-gradient-to-b from-dark-800/80 to-dark-900/90 pointer-events-none" />
+          
+          {/* Main content */}
+          <div className="relative z-10">
+            <Navbar />
+            
+            <AnimatePresence mode="wait">
+              <Suspense fallback={<SectionLoader />}>
+                <Section id="home">
+                  <Home />
+                </Section>
+                
+                <Section id="skills" className="bg-dark-900/60">
+                  <Skills />
+                </Section>
+                
+                <Section id="work">
+                  <Work />
+                </Section>
+                
+                <Section id="projects" className="bg-dark-900/60">
+                  <Project />
+                </Section>
+                
+                <Section id="contact">
+                  <Contact />
+                </Section>
+              </Suspense>
+            </AnimatePresence>
+            
+            {/* Footer */}
+            <footer className="py-8 text-center text-dark-300 text-sm">
+              <p>© {new Date().getFullYear()} Shresth Jindal. All rights reserved.</p>
+            </footer>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
 export default App;

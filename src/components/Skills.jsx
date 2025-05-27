@@ -1,354 +1,561 @@
-import React, { useRef, useEffect, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Skill3D from './Skill3D';
+import React, { useState, useRef  } from 'react';
+import { motion } from 'framer-motion';
 
-gsap.registerPlugin(ScrollTrigger);
+// Error boundary component
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
 
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    console.error("Skills component error:", error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex items-center justify-center p-10 text-center">
+          <div>
+            <h2 className="text-xl font-bold mb-2">Something went wrong</h2>
+            <p className="text-dark-300">Please refresh the page to try again</p>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// DevIcon URL helper
 const deviconUrl = (name, type = 'original') => 
   `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${name}/${name}-${type}.svg`;
 
-// Category color mapping
-const categoryColors = {
-  'Frontend': '#38bdf8',    // bright blue
-  'Backend': '#a78bfa',     // vibrant purple
-  'Programming': '#fb923c', // vibrant orange
-  'Database': '#4ade80',    // vibrant green
-  'DevOps': '#f472b6',      // vibrant pink
-  'Tools': '#818cf8',       // vibrant indigo
-  'Design': '#fb7185',      // vibrant rose
-  'Graphics': '#2dd4bf',    // vibrant teal
-  'Animation': '#e879f9',   // vibrant fuchsia
-  'Integration': '#0ea5e9'  // vibrant sky blue
+// Skill categories and their colors
+const categories = [
+  { id: 'all', name: 'All', color: '#ffcd00' },
+  { id: 'frontend', name: 'Frontend', color: '#38bdf8' },
+  { id: 'backend', name: 'Backend', color: '#a78bfa' },
+  { id: 'language', name: 'Languages', color: '#fb923c' },
+  { id: 'database', name: 'Database', color: '#4ade80' },
+  { id: 'devops', name: 'DevOps', color: '#f472b6' },
+  { id: 'tools', name: 'Tools', color: '#818cf8' },
+  { id: 'design', name: 'Design', color: '#fb7185' },
+];
+
+// Skills data
+const allSkills = [
+  { 
+    name: 'React', 
+    category: 'frontend',
+    icon: deviconUrl('react'), 
+    proficiency: 90,
+    description: 'JavaScript library for building user interfaces with reusable UI components.',
+    years: 2,
+    projects: 15,
+    related: ['Next.js', 'Redux', 'React Router']
+  },
+  { 
+    name: 'JavaScript', 
+    category: 'language',
+    icon: deviconUrl('javascript'), 
+    proficiency: 92,
+    description: 'High-level programming language that follows the ECMAScript standard.',
+    years: 2,
+    projects: 20,
+    related: ['TypeScript', 'Node.js', 'ES6+'] 
+  },
+  { 
+    name: 'HTML5', 
+    category: 'frontend',
+    icon: deviconUrl('html5'), 
+    proficiency: 95,
+    description: 'Latest version of the Hypertext Markup Language for structuring web content.',
+    years: 2,
+    projects: 25,
+    related: ['CSS3', 'Semantic HTML', 'Web Accessibility'] 
+  },
+  { 
+    name: 'CSS3', 
+    category: 'frontend',
+    icon: deviconUrl('css3'), 
+    proficiency: 88,
+    description: 'Style sheet language used for describing the presentation of a document.',
+    years: 2,
+    projects: 25,
+    related: ['SASS', 'Tailwind CSS', 'Responsive Design'] 
+  },
+  { 
+    name: 'TypeScript', 
+    category: 'language',
+    icon: deviconUrl('typescript'), 
+    proficiency: 82,
+    description: 'Strongly typed programming language that builds on JavaScript.',
+    years: 2,
+    projects: 8,
+    related: ['JavaScript', 'Angular', 'Type Systems'] 
+  },
+  { 
+    name: 'Node.js', 
+    category: 'backend',
+    icon: deviconUrl('nodejs', 'original'), 
+    proficiency: 85,
+    description: 'JavaScript runtime built on Chrome\'s V8 JavaScript engine.',
+    years: 2,
+    projects: 12,
+    related: ['Express', 'REST APIs', 'NPM'] 
+  },
+  { 
+    name: 'MongoDB', 
+    category: 'database',
+    icon: deviconUrl('mongodb', 'original'), 
+    proficiency: 80,
+    description: 'NoSQL database program using JSON-like documents with schema.',
+    years: 2,
+    projects: 10,
+    related: ['Mongoose', 'Atlas', 'NoSQL'] 
+  },
+  { 
+    name: 'Express', 
+    category: 'backend',
+    icon: deviconUrl('express', 'original'), 
+    proficiency: 84,
+    description: 'Web application framework for Node.js designed for building web applications and APIs.',
+    years: 2,
+    projects: 12,
+    related: ['Node.js', 'REST APIs', 'Middleware'] 
+  },
+  { 
+    name: 'Tailwind CSS', 
+    category: 'frontend',
+    icon: deviconUrl('tailwindcss', 'plain'), 
+    proficiency: 88,
+    description: 'Utility-first CSS framework for rapidly building custom user interfaces.',
+    years: 2,
+    projects: 8,
+    related: ['CSS', 'Responsive Design', 'UI Development'] 
+  },
+  { 
+    name: 'Git', 
+    category: 'devops',
+    icon: deviconUrl('git', 'original'), 
+    proficiency: 86,
+    description: 'Distributed version control system for tracking changes in source code.',
+    years: 2,
+    projects: 20,
+    related: ['GitHub', 'GitFlow', 'Version Control'] 
+  },
+  { 
+    name: 'Next.js', 
+    category: 'frontend',
+    icon: deviconUrl('nextjs', 'original'), 
+    proficiency: 78,
+    description: 'React framework that enables server-side rendering and static site generation.',
+    years: 2,
+    projects: 5,
+    related: ['React', 'Server-Side Rendering', 'Static Site Generation'] 
+  },
+  { 
+    name: 'Redux', 
+    category: 'frontend',
+    icon: deviconUrl('redux', 'original'), 
+    proficiency: 76,
+    description: 'State management library for JavaScript applications.',
+    years: 2,
+    projects: 6,
+    related: ['React', 'State Management', 'React Context'] 
+  },
+  { 
+    name: 'SASS', 
+    category: 'frontend',
+    icon: deviconUrl('sass', 'original'), 
+    proficiency: 82,
+    description: 'CSS preprocessor scripting language that is interpreted or compiled into CSS.',
+    years: 2,
+    projects: 10,
+    related: ['CSS', 'Preprocessors', 'BEM'] 
+  },
+  { 
+    name: 'Firebase', 
+    category: 'backend',
+    icon: deviconUrl('firebase', 'plain'), 
+    proficiency: 79,
+    description: 'Platform for creating mobile and web applications with tools and infrastructure.',
+    years: 2,
+    projects: 7,
+    related: ['Authentication', 'Cloud Firestore', 'Real-time Database'] 
+  },
+  { 
+    name: 'Figma', 
+    category: 'design',
+    icon: deviconUrl('figma', 'original'), 
+    proficiency: 75,
+    description: 'Cloud-based design tool for collaborative interface design.',
+    years: 2,
+    projects: 8,
+    related: ['UI Design', 'Prototyping', 'Design Systems'] 
+  },
+  { 
+    name: 'Docker', 
+    category: 'devops',
+    icon: deviconUrl('docker', 'original'), 
+    proficiency: 70,
+    description: 'Platform for developing, shipping, and running applications in containers.',
+    years: 2,
+    projects: 3,
+    related: ['Containerization', 'CI/CD', 'Kubernetes'] 
+  },
+  { 
+    name: 'Three.js', 
+    category: 'frontend',
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/threejs/threejs-original.svg', 
+    proficiency: 75,
+    description: 'JavaScript 3D library that makes WebGL simple, creating stunning 3D graphics in the browser.',
+    years: 2,
+    projects: 4,
+    related: ['WebGL', '3D Modeling', 'JavaScript Animation'] 
+  },
+  { 
+    name: 'GSAP', 
+    category: 'frontend',
+    icon: 'https://cdn.worldvectorlogo.com/logos/gsap-greensock.svg', 
+    proficiency: 80,
+    description: 'Professional-grade animation library for the modern web with smooth performance.',
+    years: 2,
+    projects: 7,
+    related: ['Web Animation', 'SVG Animation', 'Motion Design'] 
+  },
+  { 
+    name: 'Blender', 
+    category: 'design',
+    icon: deviconUrl('blender', 'original'), 
+    proficiency: 65,
+    description: 'Free and open-source 3D creation suite supporting the entire 3D pipeline.',
+    years: 2,
+    projects: 3,
+    related: ['3D Modeling', '3D Animation', 'Rendering'] 
+  },
+  { 
+    name: 'WebGL', 
+    category: 'frontend',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/2/25/WebGL_Logo.svg', 
+    proficiency: 70,
+    description: 'JavaScript API for rendering interactive 2D and 3D graphics within any web browser.',
+    years: 2,
+    projects: 4,
+    related: ['Three.js', 'Shaders', 'Canvas API'] 
+  },
+  { 
+    name: 'Framer Motion', 
+    category: 'frontend',
+    icon: 'https://cdn.worldvectorlogo.com/logos/framer-motion.svg', 
+    proficiency: 85,
+    description: 'Production-ready motion library for React that makes creating animations easy.',
+    years: 2,
+    projects: 6,
+    related: ['React', 'Animation', 'UI Motion'] 
+  },
+  { 
+    name: 'SQL', 
+    category: 'database',
+    icon: deviconUrl('mysql', 'original'), 
+    proficiency: 78,
+    description: 'Standard language for storing, manipulating and retrieving data in relational databases.',
+    years: 2,
+    projects: 8,
+    related: ['MySQL', 'PostgreSQL', 'Database Design'] 
+  },
+  { 
+    name: 'Axios', 
+    category: 'frontend',
+    icon: 'https://axios-http.com/assets/logo.svg', 
+    proficiency: 88,
+    description: 'Promise-based HTTP client for the browser and Node.js with an easy-to-use API.',
+    years: 2,
+    projects: 15,
+    related: ['API Integration', 'Data Fetching', 'REST Clients'] 
+  }
+];
+
+// Helper function to validate icon URLs
+const getValidIconUrl = (url) => {
+  const FALLBACK_ICON = 'https://img.icons8.com/ios/50/code--v1.png';
+  if (
+    typeof url !== 'string' ||
+    url.trim() === '' ||
+    !(url.endsWith('.svg') || url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.jpeg') || url.startsWith('data:image'))
+  ) {
+    return FALLBACK_ICON;
+  }
+  return url;
 };
 
-// Detail card component moved from Skill3D.jsx
-function DetailCard({ skill, isMobile }) {
-  // Animation ref for proficiency bar
-  const barRef = useRef(null);
+// Helper function to convert hex to RGB with error handling
+function hexToRgb(hex) {
+  if (!hex || typeof hex !== 'string') {
+    return '255, 255, 255'; // Default to white if invalid
+  }
   
-  // Animate proficiency bar when skill changes
-  useEffect(() => {
-    if (skill && barRef.current) {
-      barRef.current.style.width = '0%';
-      setTimeout(() => {
-        barRef.current.style.width = `${skill.proficiency}%`;
-      }, 50);
-    }
-  }, [skill]);
+  // Remove the '#' character if present
+  hex = hex.replace('#', '');
   
-  // Helper function to validate icon URLs (moved from Skill3D)
-  const getValidIconUrl = (url) => {
-    const FALLBACK_ICON = 'https://img.icons8.com/ios/50/code--v1.png';
-    if (
-      typeof url !== 'string' ||
-      url.trim() === '' ||
-      !(url.endsWith('.svg') || url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.jpeg') || url.startsWith('data:image'))
-    ) {
-      return FALLBACK_ICON;
-    }
-    return url;
-  };
+  // Check for valid hex format
+  if (!/^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex)) {
+    return '255, 255, 255'; // Default to white if invalid format
+  }
   
-  return (
-    <div
-      className={`
-        bg-slate-900/95 rounded-xl ${isMobile ? 'p-2.5' : 'p-4'} 
-        shadow-xl backdrop-blur-md w-full
-        flex flex-col items-center justify-between transition-all duration-300
-        ${skill ? 'opacity-100 scale-100' : 'opacity-90 scale-98'} 
-        ${isMobile ? 'text-xs' : 'text-sm'} text-white
-      `}
-      style={{
-        border: skill ? `2px solid ${categoryColors[skill.category] || '#38bdf8'}` : '1px solid rgba(56, 189, 248, 0.3)'
-      }}
-    >
-      {skill ? (
-        <>
-          <div className="flex items-center gap-3 mb-3">
-            <div className="bg-slate-900/70 rounded-lg p-2 flex items-center justify-center shadow-md"
-                 style={{ border: `1px solid ${categoryColors[skill.category] || '#38bdf8'}` }}>
-              <img 
-                src={getValidIconUrl(skill.icon)} 
-                alt={skill.name}
-                className={`${isMobile ? 'w-8 h-8' : 'w-10 h-10'} filter drop-shadow`}
-              />
-            </div>
-            <div>
-              <h3 className={`${isMobile ? 'text-base' : 'text-xl'} font-bold leading-tight m-0`}
-                  style={{ color: categoryColors[skill.category] || '#38bdf8' }}>
-                {skill.name}
-              </h3>
-              <span className="text-xs text-slate-400 block mt-0.5">
-                {skill.category}
-              </span>
-            </div>
-          </div>
-          <div className={`${isMobile ? 'text-xs' : 'text-sm'} leading-normal`}>
-            <p className="m-0 mb-2.5">{skill.description}</p>
-            
-            {/* Proficiency indicator with animation */}
-            {skill.proficiency && (
-              <div className="mt-2">
-                <div className="flex justify-between mb-1 text-xs">
-                  <span>Proficiency</span>
-                  <span style={{ color: categoryColors[skill.category] || '#38bdf8' }}>
-                    {skill.proficiency}%
-                  </span>
-                </div>
-                <div className="h-1.5 w-full bg-slate-800/80 rounded overflow-hidden">
-                  <div 
-                    ref={barRef}
-                    className="h-full transition-all duration-1000 ease-out"
-                    style={{ 
-                      width: 0, 
-                      backgroundColor: categoryColors[skill.category] || '#38bdf8',
-                      boxShadow: `0 0 10px ${categoryColors[skill.category] || '#38bdf8'}`
-                    }} 
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        </>
-      ) : (
-        <div className="text-center py-2.5 flex flex-col justify-center">
-          <h3 className="text-sky-400 mb-2 text-base">Interactive Skills Map</h3>
-          <p className="text-xs leading-relaxed text-slate-400 m-0 mb-2">
-            {isMobile 
-              ? 'Tap on any skill bubble to see details.' 
-              : 'Hover over any skill bubble to see details, or click to pin it.'}
-          </p>
-          <div className="mt-2 p-2 rounded-md bg-sky-400/10 border border-dashed border-sky-400/30 text-xs">
-            <p className="m-0 text-slate-400">
-              Use your {isMobile ? 'finger' : 'mouse'} to rotate the model
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  // Handle 3-digit hex
+  if (hex.length === 3) {
+    hex = hex.split('').map(char => char + char).join('');
+  }
+  
+  // Parse the hex values
+  try {
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    
+    return `${r}, ${g}, ${b}`;
+  } catch (error) {
+    console.error('Error parsing hex color:', error);
+    return '255, 255, 255'; // Default to white on error
+  }
 }
 
-export default function SkillsSection() {
-  const sectionRef = useRef(null);
-  const [activeCategory, setActiveCategory] = useState('All');
-  const [isMobileView, setIsMobileView] = useState(false);
-  const [displayedSkill, setDisplayedSkill] = useState(null);
+// Skill Card Component
+const SkillCard = ({ skill, onClick }) => {
+  const categoryColor = categories.find(c => c.id === skill.category)?.color || '#ffffff';
   
-  // Check for mobile view
-  useEffect(() => {
-    const checkMobile = () => {
-      const width = window.innerWidth;
-      setIsMobileView(width < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-  
-  const categories = [
-    'All', 'Frontend', 'Backend', 'Programming', 
-    'Database', 'DevOps', 'Tools', 'Design', 'Graphics', 'Animation'
-  ];
-  
-  const allSkills = [
-    { name: 'HTML5', icon: deviconUrl('html5'), category: 'Frontend', proficiency: 95, description: 'Markup language for structuring web content. I use HTML5 semantic elements for better accessibility and SEO.' },
-    { name: 'CSS3', icon: deviconUrl('css3'), category: 'Frontend', proficiency: 92, description: 'Stylesheet language for designing web pages. I create responsive, mobile-first layouts with modern CSS features.' },
-    { name: 'SASS', icon: deviconUrl('sass', 'original'), category: 'Frontend', proficiency: 88, description: 'CSS preprocessor for advanced styling. I use variables, mixins, and nesting for maintainable stylesheets.' },
-    { name: 'Bootstrap', icon: deviconUrl('bootstrap', 'original'), category: 'Frontend', proficiency: 90, description: 'Popular CSS framework for responsive design. I build interfaces quickly with Bootstrap components.' },
-    { name: 'React JS', icon: deviconUrl('react'), category: 'Frontend', proficiency: 94, description: 'JavaScript library for building user interfaces. I create reusable components and manage state efficiently.' },
-    { name: 'Next.js', icon: deviconUrl('nextjs', 'original-wordmark'), category: 'Frontend', proficiency: 85, description: 'React framework for production. I leverage server-side rendering and static site generation.' },
-    { name: 'React Router', icon: deviconUrl('reactrouter', 'original'), category: 'Frontend', proficiency: 92, description: 'Routing library for React applications. I implement client-side navigation with dynamic routes.' },
-    { name: 'Tailwind CSS', icon: deviconUrl('tailwindcss', 'original-wordmark'), category: 'Frontend', proficiency: 93, description: 'Utility-first CSS framework. I rapidly build custom designs without leaving HTML.' },
-    { name: 'JavaScript', icon: deviconUrl('javascript'), category: 'Programming', proficiency: 95, description: 'Core language for web development. I write modern ES6+ code with proper patterns and practices.' },
-    { name: 'jQuery', icon: deviconUrl('jquery', 'original-wordmark'), category: 'Frontend', proficiency: 88, description: 'JavaScript library for DOM manipulation. I use it for legacy projects that require cross-browser compatibility.' },
-    { name: 'TypeScript', icon: deviconUrl('typescript'), category: 'Programming', proficiency: 86, description: 'Typed superset of JavaScript. I leverage type safety for more robust, maintainable code.' },
-    { name: 'Three.js', icon: deviconUrl('threejs', 'original-wordmark'), category: 'Graphics', proficiency: 82, description: 'JavaScript 3D library. I create immersive 3D experiences for websites like this portfolio.' },
-    { name: 'GSAP', icon: 'https://greensock.com/uploads/monthly_2020_03/tweenmax.png.cf27916e926fbb328ff214f66b4c8429.png', category: 'Animation', proficiency: 88, description: 'Animation platform for high-performance animations. I create smooth, complex animations for web interfaces.' },
-    { name: 'Figma', icon: deviconUrl('figma'), category: 'Design', proficiency: 85, description: 'Collaborative interface design tool. I design mockups and prototypes before implementation.' },
-    { name: 'MongoDB', icon: deviconUrl('mongodb', 'original-wordmark'), category: 'Database', proficiency: 87, description: 'NoSQL database for modern apps. I design schemas and handle CRUD operations efficiently.' },
-    { name: 'Express', icon: deviconUrl('express', 'original-wordmark'), category: 'Backend', proficiency: 88, description: 'Web framework for Node.js. I build REST APIs and handle middleware for server-side logic.' },
-    { name: 'Node.js', icon: deviconUrl('nodejs', 'original-wordmark'), category: 'Backend', proficiency: 90, description: 'JavaScript runtime for server-side apps. I build scalable backend services and APIs.' },
-    { name: 'Git', icon: deviconUrl('git'), category: 'DevOps', proficiency: 91, description: 'Version control system. I manage code repositories with branching, merging, and collaboration workflows.' },
-    { name: 'Postman', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-original.svg', category: 'Tools', proficiency: 89, description: 'API development and testing tool. I test endpoints and document APIs for frontend integration.' },
-    { name: 'REST API', icon: 'https://img.icons8.com/ios/50/api-settings.png', category: 'Backend', proficiency: 92, description: 'RESTful API architecture. I design and implement standardized APIs following REST principles.' },
-    { name: 'Email JS', icon: 'https://www.emailjs.com/favicon.ico', category: 'Integration', proficiency: 86, description: 'Service for sending emails from JavaScript. I integrate contact forms without server-side code.' },
-    { name: 'C', icon: deviconUrl('c'), category: 'Programming', proficiency: 82, description: 'General-purpose programming language. I have experience with data structures and algorithm implementation.' },
-    { name: 'C++', icon: deviconUrl('cplusplus'), category: 'Programming', proficiency: 84, description: 'Object-oriented programming language. I solve complex problems with efficient code.' },
-    { name: 'Java', icon: deviconUrl('java', 'original-wordmark'), category: 'Programming', proficiency: 83, description: 'Popular language for enterprise apps. I build robust applications with OOP principles.' },
-    { name: 'Redux', icon: deviconUrl('redux', 'original'), category: 'Frontend', proficiency: 87, description: 'State management library for JavaScript apps. I implement complex state logic with Redux store and actions.' },
-    { name: 'Firebase', icon: deviconUrl('firebase', 'plain'), category: 'Backend', proficiency: 85, description: 'Platform for web and mobile apps. I use Firebase for authentication, database, and hosting services.' },
-    { name: 'Docker', icon: deviconUrl('docker', 'original'), category: 'DevOps', proficiency: 79, description: 'Containerization platform. I create and deploy applications in containers for consistency across environments.' },
-  ];
-
-  // Filter skills based on selected category
-  const filteredSkills = activeCategory === 'All' 
-    ? allSkills 
-    : allSkills.filter(skill => skill.category === activeCategory);
-  
-  // Animation setup with improved scrolling behavior
-  useEffect(() => {
-    if (!sectionRef.current) return;
-    
-    const section = sectionRef.current;
-    
-    // Create a timeline for better control
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: "top 80%",
-        end: "center center", 
-        toggleActions: "play none none none"
-      }
-    });
-    
-    // Animate heading with a nicer effect
-    tl.fromTo(
-      section.querySelector('.heading-main'),
-      { opacity: 0, y: -50 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power3.out"
-      }
-    )
-    .fromTo(
-      section.querySelector('.heading-sub'),
-      { opacity: 0, y: 20 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: "power2.out"
-      },
-      "-=0.4"
-    );
-    
-    // Animate category filters with stagger effect
-    tl.fromTo(
-      section.querySelectorAll('.category-item'),
-      { opacity: 0, y: 30, scale: 0.9 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.4,
-        stagger: 0.05,
-        ease: "back.out(1.5)"
-      },
-      "-=0.2"
-    );
-    
-    // Animate 3D container with a reveal effect
-    tl.fromTo(
-      section.querySelector('.cube-container'),
-      { opacity: 0, scale: 0.95 },
-      {
-        opacity: 1,
-        scale: 1,
-        duration: 1,
-        ease: "power2.inOut"
-      },
-      "-=0.3"
-    );
-    
-    // Add counter animation for skills count
-    tl.fromTo(
-      section.querySelector('.skills-counter'),
-      { opacity: 0, y: 10 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.5
-      },
-      "-=0.7"
-    );
-    
-    // Animate footer text
-    tl.fromTo(
-      section.querySelector('.skills-footer'),
-      { opacity: 0, y: 20 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        ease: "power2.out"
-      },
-      "-=0.4"
-    );
-    
-    // Cleanup
-    return () => {
-      if (tl.scrollTrigger) {
-        tl.scrollTrigger.kill();
-      }
-    };
-  }, []);
-
   return (
-    <div 
-      ref={sectionRef} 
-      className="min-h-screen px-4 py-8 sm:py-12 sm:px-6 lg:px-8 bg-transparent"
-      id="skills"
+    <motion.div 
+      whileHover={{ scale: 1.05, boxShadow: `0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 0 10px rgba(${hexToRgb(categoryColor)}, 0.3)` }}
+      whileTap={{ scale: 0.98 }}
+      onClick={() => onClick(skill)}
+      className="glass-card p-5 cursor-pointer relative overflow-hidden group"
     >
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-4 md:mb-8">
-          <h2 className="heading-main text-3xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-3 text-white">
-            My <span className="text-emerald-400">Skills</span>
-          </h2>
+      {/* Background color accent */}
+      <div 
+        className="absolute top-0 left-0 h-1 w-full transform origin-left transition-all duration-300 group-hover:h-full group-hover:opacity-10"
+        style={{ backgroundColor: categoryColor }}
+      ></div>
+      
+      <div className="flex items-center mb-4">
+        <div className="p-2 rounded-lg mr-3" style={{ backgroundColor: `${categoryColor}20` }}>
+          <img 
+            src={getValidIconUrl(skill.icon)} 
+            alt={skill.name} 
+            className="w-10 h-10 object-contain" 
+            onError={(e) => {
+              e.target.src = 'https://img.icons8.com/ios/50/code--v1.png';
+            }}
+          />
         </div>
-        
-        {/* Category filters */}
-        <div className="category-filters flex flex-wrap justify-center gap-1 sm:gap-1.5 md:gap-2 mb-3 md:mb-5 px-1 sm:px-0">
-          {categories.map((category, index) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`category-item px-2 sm:px-2.5 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-300 relative
-                ${activeCategory === category 
-                  ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 transform scale-105' 
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white'}`}
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              {category}
-              {activeCategory === category && (
-                <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-white rounded-full" />
-              )}
-            </button>
-          ))}
+        <div>
+          <h3 className="font-medium text-lg text-gray-100">{skill.name}</h3>
+          <span className="text-xs px-2 py-1 rounded-full" style={{ 
+            backgroundColor: `${categoryColor}20`,
+            color: categoryColor 
+          }}>
+            {categories.find(c => c.id === skill.category)?.name}
+          </span>
         </div>
+      </div>
+      
+      <p className="mt-4 text-dark-200 line-clamp-2 text-sm">{skill.description}</p>
+      
+      <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </div>
+    </motion.div>
+  );
+};
+
+// Detail Modal Component
+const SkillDetailModal = ({ skill, onClose }) => {
+  if (!skill) return null;
+  
+  const category = categories.find(c => c.id === skill.category);
+  
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div 
+        initial={{ scale: 0.9, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.9, y: 20 }}
+        className="glass-card max-w-md w-full p-6 relative overflow-hidden"
+        onClick={e => e.stopPropagation()}
+      >
+        <button 
+          className="absolute top-4 right-4 p-1 rounded-full bg-dark-600 hover:bg-dark-500 transition-colors"
+          onClick={onClose}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
         
-        {/* New layout with 3D model and card side by side */}
-        <div className="flex flex-col lg:flex-row items-center justify-between">
-          {/* 3D Model Side */}
-          <div className="w-full h-[40vh] sm:h-[45vh] md:h-[50vh] lg:h-[60vh] lg:w-1/2 relative flex items-center justify-center">
-            <Skill3D 
-              skills={filteredSkills}
-              onSkillSelect={setDisplayedSkill}
+        <div className="flex items-center">
+          <div 
+            className="p-3 rounded-lg mr-4" 
+            style={{ backgroundColor: `${category?.color}30` }}
+          >
+            <img 
+              src={getValidIconUrl(skill.icon)} 
+              alt={skill.name} 
+              className="w-12 h-12 object-contain" 
+              onError={(e) => {
+                e.target.src = 'https://img.icons8.com/ios/50/code--v1.png';
+              }}
             />
           </div>
           
-          {/* Card Side */}
-          <div className="w-full lg:w-2/5 mt-6 lg:mt-0">
-            <DetailCard skill={displayedSkill} isMobile={isMobileView} />
-            
-            {/* Instructions - now on the card side */}
-            <div className="text-center lg:text-left mt-3 md:mt-5">
-              <span className="inline-block px-2 sm:px-3 py-1 sm:py-1.5 bg-slate-800/70 rounded-full text-xs text-slate-300">
-                <span className="hidden sm:inline">👆 </span>
-                {isMobileView 
-                  ? "Tap bubbles to see details" 
-                  : "Hover over bubbles to see details, click to pin"}
-              </span>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-100">{skill.name}</h2>
+            <span 
+              className="text-xs px-2 py-1 rounded-full" 
+              style={{ 
+                backgroundColor: `${category?.color}30`,
+                color: category?.color 
+              }}
+            >
+              {category?.name}
+            </span>
+          </div>
+        </div>
+        
+        <div className="mt-6">
+          <p className="text-dark-100 leading-relaxed">{skill.description}</p>
+          
+          <div className="mt-6 grid grid-cols-2 gap-4">
+            <div className="bg-dark-700 p-3 rounded-lg">
+              <span className="text-sm text-dark-300">Experience</span>
+              <p className="text-lg font-medium">{skill.years} years</p>
+            </div>
+            <div className="bg-dark-700 p-3 rounded-lg">
+              <span className="text-sm text-dark-300">Projects</span>
+              <p className="text-lg font-medium">{skill.projects}+</p>
+            </div>
+          </div>
+          
+          <div className="mt-6">
+            <h3 className="text-sm text-dark-200 mb-2">Related Skills</h3>
+            <div className="flex flex-wrap gap-2">
+              {skill.related.map((item, index) => (
+                <span 
+                  key={index} 
+                  className="text-xs px-3 py-1 rounded-full bg-dark-600 text-dark-200"
+                >
+                  {item}
+                </span>
+              ))}
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
-}
+};
+
+// Main Skills Component
+const Skills = () => {
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [selectedSkill, setSelectedSkill] = useState(null);
+  const containerRef = useRef(null);
+  
+  // Filter skills based on active category
+  const filteredSkills = activeCategory === 'all' 
+    ? allSkills 
+    : allSkills.filter(skill => skill.category === activeCategory);
+  
+  return (
+    <ErrorBoundary>
+      <div ref={containerRef} className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="section-title">My Skills</h2>
+          <p className="mt-4 text-dark-300 max-w-2xl mx-auto">
+            I've worked with a wide range of technologies in the web development world. 
+            Here's an overview of my technical skills and expertise.
+          </p>
+        </div>
+        
+        {/* Category Filter */}
+        <div className="flex justify-center mb-12 overflow-x-auto pb-2 hide-scrollbar">
+          <div className="flex gap-2 p-1 bg-dark-700/60 backdrop-blur-md rounded-full">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                className={`px-4 py-2 rounded-full text-sm transition-all whitespace-nowrap
+                          ${activeCategory === category.id 
+                            ? 'bg-white text-dark-800 shadow-lg' 
+                            : 'text-gray-300 hover:text-white'}`}
+                style={activeCategory === category.id ? { backgroundColor: category.color } : {}}
+              >
+                {category.name}
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        {/* Skills Grid */}
+        <motion.div 
+          layout
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        >
+          {filteredSkills.map((skill, index) => (
+            <motion.div
+              key={skill.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              layout
+            >
+              <SkillCard 
+                skill={skill} 
+                onClick={(skill) => setSelectedSkill(skill)}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
+        
+        {/* Empty state */}
+        {filteredSkills.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-dark-300 mb-4">No skills found in this category</p>
+            <button
+              onClick={() => setActiveCategory('all')}
+              className="px-4 py-2 bg-primary text-dark-800 rounded-full hover:bg-opacity-90 transition-colors"
+            >
+              Show All Skills
+            </button>
+          </div>
+        )}
+        
+        {/* Skill Detail Modal */}
+        {selectedSkill && (
+          <SkillDetailModal 
+            skill={selectedSkill} 
+            onClose={() => setSelectedSkill(null)} 
+          />
+        )}
+      </div>
+    </ErrorBoundary>
+  );
+};
+
+export default Skills;
 
 
 

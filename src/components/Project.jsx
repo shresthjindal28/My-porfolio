@@ -1,9 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-// Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger);
+import  { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 const projects = [
   {
@@ -114,6 +110,7 @@ const ProjectDisplay = () => {
   const [currentProject, setCurrentProject] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loadedImages, setLoadedImages] = useState({});
+  const [imageLoading, setImageLoading] = useState({});
   
   const sectionRef = useRef(null);
   const projectsRef = useRef([]);
@@ -125,13 +122,34 @@ const ProjectDisplay = () => {
       ...prev,
       [projectId]: imageUrl
     }));
+    setImageLoading(prev => ({
+      ...prev,
+      [projectId]: false
+    }));
   };
 
   // Handle image error
   const handleImageError = (projectId) => {
-    console.log(`Failed to load image for project ${projectId}`);
-    // Don't update state here, fallback will be used automatically
+    console.log(`Failed to load image for project ${projectId}, using fallback`);
+    setImageLoading(prev => ({
+      ...prev,
+      [projectId]: false
+    }));
+    // Use fallback image
+    setLoadedImages(prev => ({
+      ...prev,
+      [projectId]: projects.find(p => p.id === projectId)?.image
+    }));
   };
+  
+  // Set initial loading state for all images
+  useEffect(() => {
+    const initialLoadingState = {};
+    projects.forEach(project => {
+      initialLoadingState[project.id] = true;
+    });
+    setImageLoading(initialLoadingState);
+  }, []);
   
   useEffect(() => {
     projectsRef.current = projectsRef.current.slice(0, projects.length);
@@ -144,58 +162,10 @@ const ProjectDisplay = () => {
 
     window.addEventListener('resize', handleResize);
 
-    gsap.fromTo(
-      titleRef.current,
-      {
-        y: 50,
-        opacity: 0
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        scrollTrigger: {
-          trigger: titleRef.current,
-          start: "top 80%"
-        }
-      }
-    );
-
-    try {
-      projectsRef.current.forEach((el, i) => {
-        if (!el) return;
-        
-        gsap.killTweensOf(el);
-        
-        gsap.fromTo(
-          el,
-          {
-            opacity: 0,
-            y: 50
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            delay: i * 0.1,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 90%"
-            }
-          }
-        );
-      });
-    } catch (err) {
-      console.error("Animation error:", err);
-      setError(true);
-    }
-
     return () => {
       window.removeEventListener('resize', handleResize);
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
-  }, [activeFilter, projects]);
+  }, []);
 
   const openProjectDetails = (project) => {
     setCurrentProject(project);
@@ -229,9 +199,6 @@ const ProjectDisplay = () => {
     <div className="text-white min-h-screen relative" ref={sectionRef}>
       {/* Hero Section */}
       <div className="w-full bg-transparent py-20 relative overflow-hidden">
-        {/* <div className="absolute inset-0 opacity-20">
-          <div className="absolute w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-from)_0%,_transparent_70%)] from-yellow-500/30"></div>
-        </div> */}
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center" ref={titleRef}>
             <h1 className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-yellow-400 to-orange-500 text-transparent bg-clip-text">My Projects</h1>
@@ -254,6 +221,7 @@ const ProjectDisplay = () => {
                     ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-medium"
                     : "text-white hover:bg-gray-700"
                 }`}
+                aria-pressed={activeFilter === filter}
               >
                 {filter}
               </button>
@@ -278,6 +246,15 @@ const ProjectDisplay = () => {
                 }}
                 className="group perspective-1000"
                 onClick={() => openProjectDetails(project)}
+                role="button"
+                aria-label={`Open ${project.title} project details`}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openProjectDetails(project);
+                  }
+                }}
               >
                 <div 
                   className="h-[350px] bg-gray-800 rounded-xl overflow-hidden relative cursor-pointer 
@@ -288,12 +265,24 @@ const ProjectDisplay = () => {
                   <div className="absolute inset-0 z-0 overflow-hidden rounded-xl">
                     <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-20 group-hover:opacity-30 transition-all duration-500`}></div>
                     
+                    {/* Image loading skeleton */}
+                    {imageLoading[project.id] && (
+                      <div className="absolute inset-0 bg-gray-800 animate-pulse">
+                        <div className="h-full w-full flex items-center justify-center">
+                          <svg className="w-12 h-12 text-gray-600 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                        </div>
+                      </div>
+                    )}
+                    
                     {/* Image with fallback */}
                     <img
                       src={project.imageUrl || project.image}
                       alt={project.title}
-                      className="h-full w-full object-cover transition-all duration-1000 ease-in-out 
-                      group-hover:scale-110 group-hover:rotate-3"
+                      className={`h-full w-full object-cover transition-all duration-1000 ease-in-out 
+                      group-hover:scale-110 group-hover:rotate-3 ${imageLoading[project.id] ? 'opacity-0' : 'opacity-100'}`}
                       loading="lazy"
                       onLoad={() => handleImageLoad(project.id, project.imageUrl)}
                       onError={() => handleImageError(project.id)}
@@ -329,11 +318,9 @@ const ProjectDisplay = () => {
                         <span 
                           key={i} 
                           className="px-3 py-1.5 bg-black/50 backdrop-blur-md rounded-full text-xs
-                          text-white border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500"
+                          text-white border border-white/10 transform translate-y-5 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500"
                           style={{ 
-                            transitionDelay: `${150 + (i * 75)}ms`,
-                            transform: 'translateY(20px)',
-                            transformOrigin: 'bottom',
+                            transitionDelay: `${150 + (i * 50)}ms`
                           }}
                         >
                           {tag}
@@ -348,6 +335,7 @@ const ProjectDisplay = () => {
                       transform translate-y-8 group-hover:translate-y-0 
                       transition-all duration-500 delay-150
                       flex items-center gap-2 w-fit shadow-lg shadow-orange-900/10"
+                      tabIndex="-1" // Remove from tab order since parent is already focusable
                     >
                       View Details
                       <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
@@ -357,34 +345,72 @@ const ProjectDisplay = () => {
                   </div>
 
                   {/* Top Corner Badge */}
-                  <div className="absolute top-0 left-0 p-2 m-3 bg-black/50 backdrop-blur-md rounded-lg text-xs font-semibold text-white opacity-0 group-hover:opacity-100 transition-all duration-500 transform -translate-y-4 group-hover:translate-y-0">
+                  <div className="absolute top-0 right-0 p-2 m-3 bg-black/50 backdrop-blur-md rounded-lg text-xs font-semibold text-white opacity-0 group-hover:opacity-100 transition-all duration-500 transform -translate-y-4 group-hover:translate-y-0">
                     #{projects.findIndex(p => p.id === project.id) + 1}
                   </div>
                 </div>
               </div>
             ))}
         </div>
+
+        {/* Empty state when no projects match the filter */}
+        {projects.filter(
+          (project) =>
+            activeFilter === "All" ||
+            project.tags.some((tag) => tag.toLowerCase().includes(activeFilter.toLowerCase()))
+        ).length === 0 && (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <svg className="w-16 h-16 text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h3 className="text-xl font-medium text-gray-400">No projects found</h3>
+            <p className="text-gray-500 mt-2">Try selecting a different filter</p>
+            <button 
+              onClick={() => setActiveFilter("All")}
+              className="mt-6 px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg text-black font-medium"
+            >
+              Show all projects
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Project Detail Modal - Enhanced */}
       {showModal && currentProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/80 backdrop-blur-sm overflow-y-auto" 
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/80 backdrop-blur-sm overflow-y-auto" 
           onClick={closeProjectDetails}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
         >
-          <div 
-            className="bg-gradient-to-b from-gray-800 to-gray-900 max-w-4xl w-full rounded-2xl overflow-hidden shadow-2xl shadow-yellow-500/20 
-            animate-fadeIn transform transition-all duration-300"
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="bg-gradient-to-b from-gray-800 to-gray-900 max-w-4xl w-full rounded-2xl overflow-hidden shadow-2xl shadow-yellow-500/20"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative h-[300px] md:h-[400px]">
               <div className={`absolute inset-0 bg-gradient-to-br ${currentProject.color} opacity-20`}></div>
+              
+              {/* Image loading state */}
+              <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
+                <svg className="w-12 h-12 text-gray-600 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </div>
+              
               <img 
-                src={currentProject.imageUrl || currentProject.image} 
+                src={loadedImages[currentProject.id] || currentProject.imageUrl || currentProject.image} 
                 alt={currentProject.title} 
                 className="w-full h-full object-cover"
+                onLoad={(e) => e.target.previousElementSibling?.classList.add('hidden')}
                 onError={(e) => {
                   e.target.onerror = null; // Prevent infinite loop
                   e.target.src = currentProject.image; // Fallback to local image
+                  e.target.previousElementSibling?.classList.add('hidden');
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
@@ -392,6 +418,7 @@ const ProjectDisplay = () => {
               <button 
                 className="absolute top-4 right-4 bg-black/50 p-2 rounded-full text-white hover:bg-black/80 transition-all"
                 onClick={closeProjectDetails}
+                aria-label="Close details"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -399,7 +426,7 @@ const ProjectDisplay = () => {
               </button>
               
               <div className="absolute bottom-0 left-0 p-6 md:p-8">
-                <h2 className="text-2xl md:text-4xl font-bold text-white">{currentProject.title}</h2>
+                <h2 id="modal-title" className="text-2xl md:text-4xl font-bold text-white">{currentProject.title}</h2>
               </div>
             </div>
             
@@ -435,7 +462,7 @@ const ProjectDisplay = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>

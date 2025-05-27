@@ -1,39 +1,115 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Rubik+Vinyl&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&family=Sixtyfour&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  html{
+  html {
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
     user-select: none;
+    color-scheme: dark;
+  }
+  
+  body {
+    @apply bg-gray-950 text-gray-100;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  /* Add this to ensure proper scroll offset calculation */
+  .scroll-container {
+    @apply relative;
+  }
+  
+  /* Add additional positioning styles for scroll elements */
+  section[id] {
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Add styles to hide broken image icons with proper fallbacks */
+  img[src^="/images/logos/"] {
+    background-color: #112240;
+    min-height: 32px;
+    min-width: 32px;
+  }
+  
+  ::selection {
+    @apply bg-primary/20 text-primary;
   }
 }
 
+@layer components {
+  .section-title {
+    @apply text-3xl sm:text-4xl md:text-5xl font-bold text-white relative inline-block;
+  }
+  
+  .section-title:after {
+    content: "";
+    @apply block h-1 w-1/2 mt-2 bg-gradient-to-r from-primary to-secondary;
+  }
+  
+  .btn-primary {
+    @apply px-8 py-3 bg-gradient-to-r from-primary to-secondary text-gray-900 
+    font-medium rounded-full transform transition-all duration-300
+    hover:scale-105 hover:shadow-lg hover:shadow-primary/20;
+  }
+  
+  .btn-outline {
+    @apply px-8 py-3 border-2 border-primary text-primary font-medium 
+    rounded-full transform transition-all duration-300
+    hover:bg-primary hover:text-gray-900 hover:scale-105;
+  }
+  
+  .glass-card {
+    @apply bg-gray-900/60 backdrop-blur-lg border border-gray-800/50 
+    rounded-xl shadow-xl shadow-black/20;
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Custom classes */
 .rubik-vinyl-regular {
   font-family: "Rubik Vinyl", serif;
   font-weight: 400;
   font-style: normal;
 }
-.roboto-light {
-  font-family: "Roboto", serif;
-  font-weight: 300;
-  font-style: normal;
+
+.poppins {
+  font-family: "Poppins", sans-serif;
 }
 
-.roboto-regular {
-  font-family: "Roboto", serif;
-  font-weight: 400;
-  font-style: normal;
+.mono {
+  font-family: "Roboto Mono", monospace;
 }
 
-.sixtyfour {
-  font-family: "Sixtyfour", serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings:
-    "BLED" 0,
-    "SCAN" 0;
+/* Animation utilities */
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 8s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
