@@ -99,8 +99,8 @@ const Home = () => {
             className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8"
           >
             <a
-              href="/shresth_jindal_resume.pdf"
-              download
+              href="/Shresth_Jindal_Resume.pdf"
+              download="Shresth_Jindal_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary"
