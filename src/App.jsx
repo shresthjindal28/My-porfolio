@@ -1,4 +1,5 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 
@@ -29,6 +30,7 @@ const SectionLoader = () => (
   </div>
 );
 
+
 const Section = ({ id, className, children }) => (
   <motion.section
     id={id}
@@ -41,6 +43,12 @@ const Section = ({ id, className, children }) => (
     {children}
   </motion.section>
 );
+
+Section.propTypes = {
+  id: PropTypes.string,
+  className: PropTypes.string,
+  children: PropTypes.node
+};
 
 // Error boundary for 3D model
 class Model3DErrorBoundary extends React.Component {
@@ -63,6 +71,10 @@ class Model3DErrorBoundary extends React.Component {
     }
     return this.props.children;
   }
+}
+
+Model3DErrorBoundary.propTypes = {
+  children: PropTypes.node
 }
 
 const App = () => {

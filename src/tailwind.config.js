@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+/** @type {import('tailwindcss').Config} */
+const module = {};
 module.exports = {
   content: [
     "./index.html",

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { FaBriefcase, FaReact } from 'react-icons/fa';
 
@@ -151,6 +152,12 @@ const TimelineCard = ({ experience, index, isMobile }) => {
   );
 };
 
+TimelineCard.propTypes = {
+  experience: PropTypes.object.isRequired,
+  index: PropTypes.number.isRequired,
+  isMobile: PropTypes.bool.isRequired
+};
+
 const Work = () => {
   const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef(null);
@@ -275,7 +282,7 @@ const Work = () => {
               <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#64ffda] to-transparent"></span>
             </h2>
             <p className="mt-5 text-gray-300 max-w-2xl mx-auto text-lg leading-relaxed">
-              My professional journey in the tech industry and the roles I've had the opportunity to take on.
+              My professional journey in the tech industry and the roles I&apos;ve had the opportunity to take on.
             </p>
           </motion.div>
         </div>

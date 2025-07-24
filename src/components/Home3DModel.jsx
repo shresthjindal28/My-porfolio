@@ -294,15 +294,26 @@ const Home3DModel = () => {
             onCreated={handleCanvasCreated}
           >
             {/* Create a more efficient lighting setup */}
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <ambientLight intensity={0.5} />
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <pointLight position={[10, 10, 10]} intensity={1.2} />
+            {/* eslint-disable-next-line react/no-unknown-property */}
+            {/* eslint-disable-next-line react/no-unknown-property,react/jsx-props-no-spreading */}
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <spotLight 
-              position={[-5, 5, 5]} 
-              angle={0.15} 
-              penumbra={1} 
-              intensity={1.2} 
+              /* eslint-disable-next-line react/no-unknown-property */
+              position={[-5, 5, 5]}
+              /* eslint-disable-next-line react/no-unknown-property */
+              angle={0.15}
+              /* eslint-disable-next-line react/no-unknown-property */
+              penumbra={1}
+              /* eslint-disable-next-line react/no-unknown-property */
+              intensity={1.2}
+              /* eslint-disable-next-line react/no-unknown-property */
               castShadow={false} // Disable shadows for better performance
             />
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <pointLight position={[5, -5, -5]} color="#ff00ff" intensity={0.4} />
             
             {/* Optimize stars based on device capability */}
@@ -318,7 +329,9 @@ const Home3DModel = () => {
             
             <Suspense fallback={
               <mesh>
+                {/* eslint-disable-next-line react/no-unknown-property */}
                 <sphereGeometry args={[0.5, 8, 8]} />
+                {/* eslint-disable-next-line react/no-unknown-property */}
                 <meshBasicMaterial color="#c490ff" wireframe />
               </mesh>
             }>

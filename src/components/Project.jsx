@@ -1,4 +1,5 @@
 import  { useEffect, useRef, useState, memo } from "react";
+import PropTypes from 'prop-types';
 import { motion } from "framer-motion";
 
 const projects = [
@@ -129,7 +130,7 @@ const projects = [
 
 
 // Memoized Project Card to prevent unnecessary re-renders
-const ProjectCard = memo(function ProjectCard({ project, openProjectDetails, loadedImages, imageLoading, handleImageLoad, handleImageError, projectsRef }) {
+const ProjectCard = memo(function ProjectCard({ project, openProjectDetails, imageLoading, handleImageLoad, handleImageError, projectsRef }) {
   return (
     <div
       key={project.id}
@@ -237,10 +238,18 @@ const ProjectCard = memo(function ProjectCard({ project, openProjectDetails, loa
   );
 });
 
+ProjectCard.propTypes = {
+  project: PropTypes.object.isRequired,
+  openProjectDetails: PropTypes.func.isRequired,
+  imageLoading: PropTypes.object.isRequired,
+  handleImageLoad: PropTypes.func.isRequired,
+  handleImageError: PropTypes.func.isRequired,
+  projectsRef: PropTypes.object.isRequired
+};
+
 const ProjectDisplay = () => {
   // Only modal state is here, grid is not re-rendered on modal open/close
-  const [error, setError] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [error] = useState(false);
   const [currentProject, setCurrentProject] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loadedImages, setLoadedImages] = useState({});
@@ -286,13 +295,7 @@ const ProjectDisplay = () => {
   }, []);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    // Removed isMobile state and handler as it was unused
   }, []);
 
   const openProjectDetails = (project) => {
@@ -340,12 +343,11 @@ const ProjectDisplay = () => {
       <div className="container mx-auto px-6 py-16 md:py-24">
         {/* Enhanced Projects Grid (no filter) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {projects.map((project, index) => (
+          {projects.map((project) => (
             <ProjectCard
               key={project.id}
               project={project}
               openProjectDetails={openProjectDetails}
-              loadedImages={loadedImages}
               imageLoading={imageLoading}
               handleImageLoad={handleImageLoad}
               handleImageError={handleImageError}

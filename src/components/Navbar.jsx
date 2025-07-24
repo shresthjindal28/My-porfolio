@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-scroll';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -146,9 +146,9 @@ const Navbar = () => {
                 animate={{ y: 0 }}
                 transition={{ delay: 0.1 }}
               >
-                {navLinks.map((link, index) => (
-                  <Link
-                    key={link.to}
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
                     to={link.to}
                     spy={true}
                     smooth={true}

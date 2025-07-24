@@ -1,5 +1,8 @@
 import React, { useState, useRef  } from 'react';
+// ...existing code...
 import { motion } from 'framer-motion';
+
+import PropTypes from 'prop-types';
 
 // Error boundary component
 class ErrorBoundary extends React.Component {
@@ -30,6 +33,9 @@ class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
+ErrorBoundary.propTypes = {
+  children: PropTypes.node
+};
 
 // DevIcon URL helper
 const deviconUrl = (name, type = 'original') => 
@@ -406,6 +412,11 @@ const SkillCard = ({ skill, onClick }) => {
   );
 };
 
+SkillCard.propTypes = {
+  skill: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired
+};
+
 // Detail Modal Component
 const SkillDetailModal = ({ skill, onClose }) => {
   if (!skill) return null;
@@ -498,6 +509,11 @@ const SkillDetailModal = ({ skill, onClose }) => {
   );
 };
 
+SkillDetailModal.propTypes = {
+  skill: PropTypes.object,
+  onClose: PropTypes.func.isRequired
+};
+
 // Main Skills Component
 const Skills = () => {
   const [activeCategory, setActiveCategory] = useState('all');
@@ -515,8 +531,8 @@ const Skills = () => {
         <div className="text-center mb-12">
           <h2 className="section-title">My Skills</h2>
           <p className="mt-4 text-dark-300 max-w-2xl mx-auto">
-            I've worked with a wide range of technologies in the web development world. 
-            Here's an overview of my technical skills and expertise.
+            I&apos;ve worked with a wide range of technologies in the web development world. 
+            Here&apos;s an overview of my technical skills and expertise.
           </p>
         </div>
         

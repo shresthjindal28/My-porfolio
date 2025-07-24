@@ -1,6 +1,7 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useRef, useMemo, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 const Shape3D = ({ position, color, speed = 1, size = 1, type }) => {
   const shapeRef = useRef();
@@ -20,35 +21,45 @@ const Shape3D = ({ position, color, speed = 1, size = 1, type }) => {
       case 'box':
         return (
           <mesh ref={shapeRef}>
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <boxGeometry args={[size, size, size]} />
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <meshPhysicalMaterial color={color} metalness={0.9} roughness={0.1} clearcoat={1} />
           </mesh>
         );
       case 'sphere':
         return (
           <mesh ref={shapeRef}>
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <sphereGeometry args={[size * 0.6, 32, 32]} />
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <meshPhysicalMaterial color={color} metalness={0.8} roughness={0.2} clearcoat={0.8} />
           </mesh>
         );
       case 'torus':
         return (
           <mesh ref={shapeRef}>
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <torusGeometry args={[size * 0.5, size * 0.2, 16, 32]} />
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <meshPhysicalMaterial color={color} metalness={0.7} roughness={0.3} />
           </mesh>
         );
       case 'octahedron':
         return (
           <mesh ref={shapeRef}>
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <octahedronGeometry args={[size * 0.7]} />
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <meshPhysicalMaterial color={color} metalness={0.9} roughness={0.1} clearcoat={1} />
           </mesh>
         );
       case 'icosahedron':
         return (
           <mesh ref={shapeRef}>
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <icosahedronGeometry args={[size * 0.7]} />
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <meshPhysicalMaterial color={color} metalness={0.8} roughness={0.2} />
           </mesh>
         );
@@ -57,7 +68,16 @@ const Shape3D = ({ position, color, speed = 1, size = 1, type }) => {
     }
   };
 
+  // eslint-disable-next-line react/no-unknown-property
   return <group position={position}>{getShape()}</group>;
+};
+
+Shape3D.propTypes = {
+  position: PropTypes.array,
+  color: PropTypes.string,
+  speed: PropTypes.number,
+  size: PropTypes.number,
+  type: PropTypes.string
 };
 
 const Model3D = () => {
@@ -125,10 +145,15 @@ const Model3D = () => {
         maxPolarAngle={Math.PI / 1.5}
         minPolarAngle={Math.PI / 3}
       />
+      {/* eslint-disable-next-line react/no-unknown-property */}
       <ambientLight intensity={0.7} />
+      {/* eslint-disable-next-line react/no-unknown-property */}
       <pointLight position={[10, 10, 10]} intensity={1.5} />
+      {/* eslint-disable-next-line react/no-unknown-property */}
       <pointLight position={[-10, -10, -10]} intensity={0.8} />
+      {/* eslint-disable-next-line react/no-unknown-property */}
       <spotLight position={[5, 5, 5]} angle={0.3} penumbra={1} intensity={1} />
+      {/* eslint-disable-next-line react/no-unknown-property */}
       <hemisphereLight intensity={0.5} groundColor="#ff0f00" />
       {generateShapes.map((props, index) => (
         <Shape3D key={index} {...props} />

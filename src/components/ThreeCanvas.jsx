@@ -1,5 +1,4 @@
-// src/components/ThreeCanvas.jsx
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 const ThreeCanvas = () => {
@@ -17,7 +16,8 @@ const ThreeCanvas = () => {
 
     const renderer = new THREE.WebGLRenderer({ alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    canvasRef.current.appendChild(renderer.domElement);
+    const node = canvasRef.current;
+    node.appendChild(renderer.domElement);
 
     const geometry = new THREE.TorusGeometry(1, 0.4, 16, 100);
     const material = new THREE.MeshBasicMaterial({ color: 0xff6347 });
@@ -34,8 +34,9 @@ const ThreeCanvas = () => {
     animate();
 
     return () => {
-      while (canvasRef.current.firstChild) {
-        canvasRef.current.removeChild(canvasRef.current.firstChild);
+      if (!node) return;
+      while (node.firstChild) {
+        node.removeChild(node.firstChild);
       }
     };
   }, []);
