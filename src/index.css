@@ -31,6 +31,16 @@
     overflow-x: hidden;
     position: relative;
   }
+
+  /* Hide scrollbar globally */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  * {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
   
   /* Add this to ensure proper scroll offset calculation */
   .scroll-container {
