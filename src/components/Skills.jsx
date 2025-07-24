@@ -278,6 +278,36 @@ const allSkills = [
     years: 2,
     projects: 15,
     related: ['API Integration', 'Data Fetching', 'REST Clients'] 
+  },
+  { 
+    name: 'Husky', 
+    category: 'devops',
+    icon: 'https://typicode.github.io/husky/logo.svg', 
+    proficiency: 75,
+    description: 'Git hooks tool that improves your commits and more. Easy to use and configure.',
+    years: 1,
+    projects: 6,
+    related: ['Git Hooks', 'Code Quality', 'Pre-commit Checks'] 
+  },
+  { 
+    name: 'ESLint', 
+    category: 'tools',
+    icon: deviconUrl('eslint', 'original'), 
+    proficiency: 85,
+    description: 'Static analysis tool for identifying problematic patterns in JavaScript code.',
+    years: 2,
+    projects: 18,
+    related: ['Code Quality', 'Linting', 'JavaScript Standards'] 
+  },
+  { 
+    name: 'Redis', 
+    category: 'database',
+    icon: deviconUrl('redis', 'original'), 
+    proficiency: 72,
+    description: 'In-memory data structure store used as database, cache, and message broker.',
+    years: 1,
+    projects: 5,
+    related: ['Caching', 'Session Storage', 'Real-time Applications'] 
   }
 ];
 
