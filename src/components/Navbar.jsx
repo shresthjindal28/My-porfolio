@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-scroll';
 import { motion, AnimatePresence } from 'framer-motion';
+import { scrollToSection } from '../utils/scroll';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -95,16 +95,11 @@ const Navbar = () => {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-1 lg:space-x-8">
             {navLinks.map((link) => (
-              <Link
+              <button
                 key={link.to}
-                to={link.to}
-                spy={true}
-                smooth={true}
-                duration={500}
-                offset={-80}
+                onClick={() => scrollToSection(link.to)}
                 className={`relative py-2 px-3 text-sm lg:text-base font-medium cursor-pointer transition-all duration-300
                            ${activeSection === link.to ? 'text-primary' : 'text-gray-300 hover:text-gray-100'}`}
-                activeClass="active"
               >
                 {link.name}
                 {activeSection === link.to && (
@@ -113,20 +108,16 @@ const Navbar = () => {
                     layoutId="navbar-indicator"
                   />
                 )}
-              </Link>
+              </button>
             ))}
             
-            <Link
-              to="contact"
-              spy={true}
-              smooth={true}
-              duration={500}
-              offset={-80}
+            <button
+              onClick={() => scrollToSection('contact')}
               className="bg-gradient-to-r from-primary to-secondary text-dark-800 px-4 lg:px-6 py-2 rounded-full 
                         text-sm lg:text-base font-medium hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
             >
               Get In Touch
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -146,33 +137,29 @@ const Navbar = () => {
                 animate={{ y: 0 }}
                 transition={{ delay: 0.1 }}
               >
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                    to={link.to}
-                    spy={true}
-                    smooth={true}
-                    duration={500}
-                    offset={-80}
-                    className={`py-3 px-4 rounded-lg text-center transition-colors
+                {navLinks.map((link) => (
+                  <button
+                    key={link.to}
+                    onClick={() => {
+                      scrollToSection(link.to);
+                      closeMenu();
+                    }}
+                    className={`py-3 px-4 rounded-lg text-center transition-colors w-full
                              ${activeSection === link.to ? 'bg-dark-600 text-primary' : 'text-gray-300'}`}
-                    onClick={closeMenu}
                   >
                     {link.name}
-                  </Link>
+                  </button>
                 ))}
                 
-                <Link
-                  to="contact"
-                  spy={true}
-                  smooth={true}
-                  duration={500}
-                  offset={-80}
-                  className="bg-gradient-to-r from-primary to-secondary text-dark-800 py-3 px-4 rounded-lg font-medium text-center"
-                  onClick={closeMenu}
+                <button
+                  onClick={() => {
+                    scrollToSection('contact');
+                    closeMenu();
+                  }}
+                  className="bg-gradient-to-r from-primary to-secondary text-dark-800 py-3 px-4 rounded-lg font-medium text-center w-full"
                 >
                   Get In Touch
-                </Link>
+                </button>
               </motion.div>
             </motion.div>
           )}

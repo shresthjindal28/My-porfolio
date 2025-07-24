@@ -2,6 +2,7 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
+import { useLenis } from './hooks/useLenis';
 
 // Lazy load components
 const Home = lazy(() => import('./components/Home'));
@@ -79,6 +80,9 @@ Model3DErrorBoundary.propTypes = {
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Initialize Lenis smooth scroll
+  useLenis();
 
   useEffect(() => {
     // Simulate loading resources

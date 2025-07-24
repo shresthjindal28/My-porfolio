@@ -8,9 +8,20 @@
 @layer base {
   html {
     font-family: 'Poppins', sans-serif;
-    scroll-behavior: smooth;
     user-select: none;
     color-scheme: dark;
+  }
+  
+  html.lenis {
+    height: auto;
+  }
+  
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
   }
   
   body {

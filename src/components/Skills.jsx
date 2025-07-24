@@ -61,8 +61,6 @@ const allSkills = [
     icon: deviconUrl('react'), 
     proficiency: 90,
     description: 'JavaScript library for building user interfaces with reusable UI components.',
-    years: 2,
-    projects: 15,
     related: ['Next.js', 'Redux', 'React Router']
   },
   { 
@@ -71,8 +69,6 @@ const allSkills = [
     icon: deviconUrl('javascript'), 
     proficiency: 92,
     description: 'High-level programming language that follows the ECMAScript standard.',
-    years: 2,
-    projects: 20,
     related: ['TypeScript', 'Node.js', 'ES6+'] 
   },
   { 
@@ -81,8 +77,6 @@ const allSkills = [
     icon: deviconUrl('html5'), 
     proficiency: 95,
     description: 'Latest version of the Hypertext Markup Language for structuring web content.',
-    years: 2,
-    projects: 25,
     related: ['CSS3', 'Semantic HTML', 'Web Accessibility'] 
   },
   { 
@@ -91,8 +85,6 @@ const allSkills = [
     icon: deviconUrl('css3'), 
     proficiency: 88,
     description: 'Style sheet language used for describing the presentation of a document.',
-    years: 2,
-    projects: 25,
     related: ['SASS', 'Tailwind CSS', 'Responsive Design'] 
   },
   { 
@@ -101,8 +93,6 @@ const allSkills = [
     icon: deviconUrl('typescript'), 
     proficiency: 82,
     description: 'Strongly typed programming language that builds on JavaScript.',
-    years: 2,
-    projects: 8,
     related: ['JavaScript', 'Angular', 'Type Systems'] 
   },
   { 
@@ -111,8 +101,6 @@ const allSkills = [
     icon: deviconUrl('nodejs', 'original'), 
     proficiency: 85,
     description: 'JavaScript runtime built on Chrome\'s V8 JavaScript engine.',
-    years: 2,
-    projects: 12,
     related: ['Express', 'REST APIs', 'NPM'] 
   },
   { 
@@ -121,8 +109,6 @@ const allSkills = [
     icon: deviconUrl('mongodb', 'original'), 
     proficiency: 80,
     description: 'NoSQL database program using JSON-like documents with schema.',
-    years: 2,
-    projects: 10,
     related: ['Mongoose', 'Atlas', 'NoSQL'] 
   },
   { 
@@ -131,8 +117,6 @@ const allSkills = [
     icon: deviconUrl('express', 'original'), 
     proficiency: 84,
     description: 'Web application framework for Node.js designed for building web applications and APIs.',
-    years: 2,
-    projects: 12,
     related: ['Node.js', 'REST APIs', 'Middleware'] 
   },
   { 
@@ -141,8 +125,6 @@ const allSkills = [
     icon: deviconUrl('tailwindcss', 'plain'), 
     proficiency: 88,
     description: 'Utility-first CSS framework for rapidly building custom user interfaces.',
-    years: 2,
-    projects: 8,
     related: ['CSS', 'Responsive Design', 'UI Development'] 
   },
   { 
@@ -151,8 +133,6 @@ const allSkills = [
     icon: deviconUrl('git', 'original'), 
     proficiency: 86,
     description: 'Distributed version control system for tracking changes in source code.',
-    years: 2,
-    projects: 20,
     related: ['GitHub', 'GitFlow', 'Version Control'] 
   },
   { 
@@ -161,8 +141,6 @@ const allSkills = [
     icon: deviconUrl('nextjs', 'original'), 
     proficiency: 78,
     description: 'React framework that enables server-side rendering and static site generation.',
-    years: 2,
-    projects: 5,
     related: ['React', 'Server-Side Rendering', 'Static Site Generation'] 
   },
   { 
@@ -171,8 +149,6 @@ const allSkills = [
     icon: deviconUrl('redux', 'original'), 
     proficiency: 76,
     description: 'State management library for JavaScript applications.',
-    years: 2,
-    projects: 6,
     related: ['React', 'State Management', 'React Context'] 
   },
   { 
@@ -181,8 +157,6 @@ const allSkills = [
     icon: deviconUrl('sass', 'original'), 
     proficiency: 82,
     description: 'CSS preprocessor scripting language that is interpreted or compiled into CSS.',
-    years: 2,
-    projects: 10,
     related: ['CSS', 'Preprocessors', 'BEM'] 
   },
   { 
@@ -191,8 +165,6 @@ const allSkills = [
     icon: deviconUrl('firebase', 'plain'), 
     proficiency: 79,
     description: 'Platform for creating mobile and web applications with tools and infrastructure.',
-    years: 2,
-    projects: 7,
     related: ['Authentication', 'Cloud Firestore', 'Real-time Database'] 
   },
   { 
@@ -201,8 +173,6 @@ const allSkills = [
     icon: deviconUrl('figma', 'original'), 
     proficiency: 75,
     description: 'Cloud-based design tool for collaborative interface design.',
-    years: 2,
-    projects: 8,
     related: ['UI Design', 'Prototyping', 'Design Systems'] 
   },
   { 
@@ -211,8 +181,6 @@ const allSkills = [
     icon: deviconUrl('docker', 'original'), 
     proficiency: 70,
     description: 'Platform for developing, shipping, and running applications in containers.',
-    years: 2,
-    projects: 3,
     related: ['Containerization', 'CI/CD', 'Kubernetes'] 
   },
   { 
@@ -221,8 +189,6 @@ const allSkills = [
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/threejs/threejs-original.svg', 
     proficiency: 75,
     description: 'JavaScript 3D library that makes WebGL simple, creating stunning 3D graphics in the browser.',
-    years: 2,
-    projects: 4,
     related: ['WebGL', '3D Modeling', 'JavaScript Animation'] 
   },
   { 
@@ -231,8 +197,6 @@ const allSkills = [
     icon: 'https://cdn.worldvectorlogo.com/logos/gsap-greensock.svg', 
     proficiency: 80,
     description: 'Professional-grade animation library for the modern web with smooth performance.',
-    years: 2,
-    projects: 7,
     related: ['Web Animation', 'SVG Animation', 'Motion Design'] 
   },
   { 
@@ -241,8 +205,6 @@ const allSkills = [
     icon: deviconUrl('blender', 'original'), 
     proficiency: 65,
     description: 'Free and open-source 3D creation suite supporting the entire 3D pipeline.',
-    years: 2,
-    projects: 3,
     related: ['3D Modeling', '3D Animation', 'Rendering'] 
   },
   { 
@@ -251,8 +213,6 @@ const allSkills = [
     icon: 'https://upload.wikimedia.org/wikipedia/commons/2/25/WebGL_Logo.svg', 
     proficiency: 70,
     description: 'JavaScript API for rendering interactive 2D and 3D graphics within any web browser.',
-    years: 2,
-    projects: 4,
     related: ['Three.js', 'Shaders', 'Canvas API'] 
   },
   { 
@@ -261,8 +221,6 @@ const allSkills = [
     icon: 'https://cdn.worldvectorlogo.com/logos/framer-motion.svg', 
     proficiency: 85,
     description: 'Production-ready motion library for React that makes creating animations easy.',
-    years: 2,
-    projects: 6,
     related: ['React', 'Animation', 'UI Motion'] 
   },
   { 
@@ -271,8 +229,6 @@ const allSkills = [
     icon: deviconUrl('mysql', 'original'), 
     proficiency: 78,
     description: 'Standard language for storing, manipulating and retrieving data in relational databases.',
-    years: 2,
-    projects: 8,
     related: ['MySQL', 'PostgreSQL', 'Database Design'] 
   },
   { 
@@ -281,8 +237,6 @@ const allSkills = [
     icon: 'https://axios-http.com/assets/logo.svg', 
     proficiency: 88,
     description: 'Promise-based HTTP client for the browser and Node.js with an easy-to-use API.',
-    years: 2,
-    projects: 15,
     related: ['API Integration', 'Data Fetching', 'REST Clients'] 
   },
   { 
@@ -291,8 +245,6 @@ const allSkills = [
     icon: 'https://typicode.github.io/husky/logo.svg', 
     proficiency: 75,
     description: 'Git hooks tool that improves your commits and more. Easy to use and configure.',
-    years: 1,
-    projects: 6,
     related: ['Git Hooks', 'Code Quality', 'Pre-commit Checks'] 
   },
   { 
@@ -301,8 +253,6 @@ const allSkills = [
     icon: deviconUrl('eslint', 'original'), 
     proficiency: 85,
     description: 'Static analysis tool for identifying problematic patterns in JavaScript code.',
-    years: 2,
-    projects: 18,
     related: ['Code Quality', 'Linting', 'JavaScript Standards'] 
   },
   { 
@@ -311,9 +261,39 @@ const allSkills = [
     icon: deviconUrl('redis', 'original'), 
     proficiency: 72,
     description: 'In-memory data structure store used as database, cache, and message broker.',
-    years: 1,
-    projects: 5,
     related: ['Caching', 'Session Storage', 'Real-time Applications'] 
+  },
+  { 
+    name: 'WebSocket', 
+    category: 'backend',
+    icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/websocket.svg', 
+    proficiency: 78,
+    description: 'Protocol for real-time, bidirectional communication between client and server.',
+    related: ['Socket.io', 'Real-time Apps', 'Chat Applications'] 
+  },
+  { 
+    name: 'Clerk', 
+    category: 'backend',
+    icon: 'https://clerk.com/favicon.ico', 
+    proficiency: 82,
+    description: 'Complete authentication and user management solution for modern applications.',
+    related: ['Authentication', 'User Management', 'OAuth'] 
+  },
+  { 
+    name: 'Prisma', 
+    category: 'database',
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/prisma/prisma-original.svg', 
+    proficiency: 85,
+    description: 'Modern database toolkit with type-safe client and powerful schema management.',
+    related: ['ORM', 'Database Schema', 'Type Safety'] 
+  },
+  { 
+    name: 'Thunder Client', 
+    category: 'tools',
+    icon: 'https://github.com/rangav/thunder-client-support/raw/master/images/thunder-client.png', 
+    proficiency: 88,
+    description: 'Lightweight REST API client for VS Code with intuitive interface.',
+    related: ['API Testing', 'REST Client', 'VS Code Extension'] 
   }
 ];
 
@@ -479,17 +459,6 @@ const SkillDetailModal = ({ skill, onClose }) => {
         <div className="mt-6">
           <p className="text-dark-100 leading-relaxed">{skill.description}</p>
           
-          <div className="mt-6 grid grid-cols-2 gap-4">
-            <div className="bg-dark-700 p-3 rounded-lg">
-              <span className="text-sm text-dark-300">Experience</span>
-              <p className="text-lg font-medium">{skill.years} years</p>
-            </div>
-            <div className="bg-dark-700 p-3 rounded-lg">
-              <span className="text-sm text-dark-300">Projects</span>
-              <p className="text-lg font-medium">{skill.projects}+</p>
-            </div>
-          </div>
-          
           <div className="mt-6">
             <h3 className="text-sm text-dark-200 mb-2">Related Skills</h3>
             <div className="flex flex-wrap gap-2">
@@ -516,14 +485,8 @@ SkillDetailModal.propTypes = {
 
 // Main Skills Component
 const Skills = () => {
-  const [activeCategory, setActiveCategory] = useState('all');
   const [selectedSkill, setSelectedSkill] = useState(null);
   const containerRef = useRef(null);
-  
-  // Filter skills based on active category
-  const filteredSkills = activeCategory === 'all' 
-    ? allSkills 
-    : allSkills.filter(skill => skill.category === activeCategory);
   
   return (
     <ErrorBoundary>
@@ -536,31 +499,12 @@ const Skills = () => {
           </p>
         </div>
         
-        {/* Category Filter */}
-        <div className="flex justify-center mb-12 overflow-x-auto pb-2 hide-scrollbar">
-          <div className="flex gap-2 p-1 bg-dark-700/60 backdrop-blur-md rounded-full">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setActiveCategory(category.id)}
-                className={`px-4 py-2 rounded-full text-sm transition-all whitespace-nowrap
-                          ${activeCategory === category.id 
-                            ? 'bg-white text-dark-800 shadow-lg' 
-                            : 'text-gray-300 hover:text-white'}`}
-                style={activeCategory === category.id ? { backgroundColor: category.color } : {}}
-              >
-                {category.name}
-              </button>
-            ))}
-          </div>
-        </div>
-        
         {/* Skills Grid */}
         <motion.div 
           layout
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
-          {filteredSkills.map((skill, index) => (
+          {allSkills.map((skill, index) => (
             <motion.div
               key={skill.name}
               initial={{ opacity: 0, y: 20 }}
@@ -575,19 +519,6 @@ const Skills = () => {
             </motion.div>
           ))}
         </motion.div>
-        
-        {/* Empty state */}
-        {filteredSkills.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-dark-300 mb-4">No skills found in this category</p>
-            <button
-              onClick={() => setActiveCategory('all')}
-              className="px-4 py-2 bg-primary text-dark-800 rounded-full hover:bg-opacity-90 transition-colors"
-            >
-              Show All Skills
-            </button>
-          </div>
-        )}
         
         {/* Skill Detail Modal */}
         {selectedSkill && (
