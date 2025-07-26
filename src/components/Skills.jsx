@@ -241,7 +241,7 @@ const allSkills = [
   { 
     name: 'Husky', 
     category: 'devops',
-    icon: 'https://typicode.github.io/husky/logo.svg', 
+    icon: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="%23f472b6"/><text x="16" y="21" text-anchor="middle" font-size="12" fill="white" font-family="Arial">HUSKY</text></svg>', 
     proficiency: 75,
     description: 'Git hooks tool that improves your commits and more. Easy to use and configure.',
     related: ['Git Hooks', 'Code Quality', 'Pre-commit Checks'] 
