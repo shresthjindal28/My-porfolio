@@ -6,8 +6,8 @@ import { useLenis } from "./hooks/useLenis";
 import useIsDesktop from "./hooks/useIsDesktop";
 
 import Home from "./components/Home";
-import Skills from "./components/Skills";
-import Contact from "./components/Contact";
+const Skills = lazy(() => import("./components/Skills"));
+const Contact = lazy(() => import("./components/Contact"));
 const Project = lazy(() => import("./components/Project"));
 const Work = lazy(() => import("./components/Work"));
 const Model3D = lazy(() => import("./components/Model3D"));
@@ -97,9 +97,11 @@ const App = () => {
               <Home />
             </Section>
 
-            <Section id="skills" className="bg-dark-900/60">
-              <Skills />
-            </Section>
+            <Suspense fallback={<SectionLoader />}>
+              <Section id="skills" className="bg-dark-900/60">
+                <Skills />
+              </Section>
+            </Suspense>
 
             {/* Lazy load Work section */}
             <Suspense fallback={<SectionLoader />}>
@@ -116,9 +118,11 @@ const App = () => {
             </Suspense>
 
             {/* Contact loads instantly */}
-            <Section id="contact">
-              <Contact />
-            </Section>
+            <Suspense fallback={<SectionLoader />}>
+              <Section id="contact">
+                <Contact />
+              </Section>
+            </Suspense>
             {/* Footer */}
             <footer className="py-8 text-center text-dark-300 text-sm">
               <p>

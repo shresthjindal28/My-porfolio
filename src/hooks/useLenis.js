@@ -14,6 +14,14 @@ export const useLenis = () => {
       smoothTouch: false,
       touchMultiplier: 2,
       infinite: false,
+      wrapper: window,
+      content: document.documentElement,
+      eventsTarget: window,
+      wheelEventsTarget: window,
+      touchEventsTarget: window,
+      lerp: 0.1,
+      syncTouch: true,
+      autoResize: true,
     });
 
     // Make lenis available globally for custom scroll functions
