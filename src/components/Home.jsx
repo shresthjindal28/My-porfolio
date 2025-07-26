@@ -1,5 +1,5 @@
 // src/components/Home.jsx
-import  { useRef, Suspense, useState, useEffect } from "react";
+import  { useRef, Suspense } from "react";
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import Home3DModel from './Home3DModel';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -15,26 +15,12 @@ const ModelFallback = () => (
   </div>
 );
 
-// Skeleton placeholder for FCP
-const SkeletonPlaceholder = () => (
-  <div className="w-full h-full flex items-center justify-center">
-    
-  </div>
-);
-
 const Home = () => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({ 
     target: containerRef, 
     offset: ["start start", "end start"] 
   });
-
-  // Skeleton state for FCP
-  const [showSkeleton, setShowSkeleton] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => setShowSkeleton(false), 2000); // 2 seconds
-    return () => clearTimeout(timer);
-  }, []);
 
   // Parallax effect values
   const y1 = useTransform(scrollYProgress, [0, 1], [0, 300]);
@@ -63,13 +49,9 @@ const Home = () => {
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 blur-md animate-pulse" />
             <div className="absolute inset-3 rounded-full bg-dark-800 border border-dark-600" />
             <div className="absolute inset-0 flex items-center justify-center">
-              {showSkeleton ? (
-                <SkeletonPlaceholder />
-              ) : (
-                <Suspense fallback={<ModelFallback />}>
-                  <Home3DModel />
-                </Suspense>
-              )}
+              <Suspense fallback={<ModelFallback />}>
+                <Home3DModel />
+              </Suspense>
             </div>
           </div>
         </motion.div>
