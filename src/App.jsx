@@ -70,61 +70,63 @@ const App = () => {
   useLenis();
 
   return (
-    <div className="text-white min-h-screen relative w-full overflow-x-hidden bg-dark-800">
-      {/* Background 3D model - only render on desktop */}
-      <div className="fixed inset-0 z-0 pointer-events-none hidden lg:block">
-        <Model3DErrorBoundary>
-          <Suspense fallback={null}>
-            <Model3D />
-          </Suspense>
-        </Model3DErrorBoundary>
-      </div>
+    <Suspense fallback={<SectionLoader />}>
+      <div className="text-white min-h-screen relative w-full overflow-x-hidden bg-dark-800">
+        {/* Background 3D model - only render on desktop */}
+        <div className="fixed inset-0 z-0 pointer-events-none hidden lg:block">
+          <Model3DErrorBoundary>
+            <Suspense fallback={null}>
+              <Model3D />
+            </Suspense>
+          </Model3DErrorBoundary>
+        </div>
 
-      {/* Overlay gradient to improve contrast with background */}
-      <div className="fixed inset-0 z-0 bg-gradient-to-b from-dark-800/80 to-dark-900/90 pointer-events-none" />
+        {/* Overlay gradient to improve contrast with background */}
+        <div className="fixed inset-0 z-0 bg-gradient-to-b from-dark-800/80 to-dark-900/90 pointer-events-none" />
 
-      {/* Main content */}
-      <div className="relative z-10">
-        <Navbar />
+        {/* Main content */}
+        <div className="relative z-10">
+          <Navbar />
 
-        <AnimatePresence mode="wait">
-          {/* Home and Skills load instantly */}
-          <Section id="home">
-            <Home />
-          </Section>
-
-          <Section id="skills" className="bg-dark-900/60">
-            <Skills />
-          </Section>
-
-          {/* Lazy load Work section */}
-          <Suspense fallback={<SectionLoader />}>
-            <Section id="work">
-              <Work />
+          <AnimatePresence mode="wait">
+            {/* Home and Skills load instantly */}
+            <Section id="home">
+              <Home />
             </Section>
-          </Suspense>
 
-          {/* Lazy load Projects section */}
-          <Suspense fallback={<SectionLoader />}>
-            <Section id="projects" className="bg-dark-900/60">
-              <Project />
+            <Section id="skills" className="bg-dark-900/60">
+              <Skills />
             </Section>
-          </Suspense>
 
-          {/* Contact loads instantly */}
-          <Section id="contact">
-            <Contact />
-          </Section>
-          {/* Footer */}
-          <footer className="py-8 text-center text-dark-300 text-sm">
-            <p>
-              © {new Date().getFullYear()} Shresth Jindal. All rights
-              reserved.
-            </p>
-          </footer>
-        </AnimatePresence>
+            {/* Lazy load Work section */}
+            <Suspense fallback={<SectionLoader />}>
+              <Section id="work">
+                <Work />
+              </Section>
+            </Suspense>
+
+            {/* Lazy load Projects section */}
+            <Suspense fallback={<SectionLoader />}>
+              <Section id="projects" className="bg-dark-900/60">
+                <Project />
+              </Section>
+            </Suspense>
+
+            {/* Contact loads instantly */}
+            <Section id="contact">
+              <Contact />
+            </Section>
+            {/* Footer */}
+            <footer className="py-8 text-center text-dark-300 text-sm">
+              <p>
+                © {new Date().getFullYear()} Shresth Jindal. All rights
+                reserved.
+              </p>
+            </footer>
+          </AnimatePresence>
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 
