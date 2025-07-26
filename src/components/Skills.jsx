@@ -365,6 +365,7 @@ const SkillCard = ({ skill, onClick }) => {
             src={getValidIconUrl(skill.icon)} 
             alt={skill.name} 
             className="w-10 h-10 object-contain" 
+            loading="lazy"
             onError={(e) => {
               e.target.src = 'https://img.icons8.com/ios/50/code--v1.png';
             }}
@@ -436,6 +437,7 @@ const SkillDetailModal = ({ skill, onClose }) => {
               src={getValidIconUrl(skill.icon)} 
               alt={skill.name} 
               className="w-12 h-12 object-contain" 
+              loading="lazy"
               onError={(e) => {
                 e.target.src = 'https://img.icons8.com/ios/50/code--v1.png';
               }}
