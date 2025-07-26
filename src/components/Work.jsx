@@ -7,8 +7,6 @@ const workExperience = [
   {
     title: "Full Stack Web Engineer",
     company_name: "Dolt Technologies",
-    logo: "/images/logos/dolt-logo.png",
-    fallbackLogo: "/images/logos/placeholder-logo.svg",
     icon: <FaBriefcase />,
     iconBg: "#E63946",
     date: "Feb 2025 - Present",
@@ -24,8 +22,6 @@ const workExperience = [
   {
     title: "Frontend Developer",
     company_name: "JoeAF Digital",
-    logo: "/images/logos/joeaf-logo.png",
-    fallbackLogo: "/images/logos/placeholder-logo.svg",
     icon: <FaReact />,
     iconBg: "#3b82f6",
     date: "Dec 2024 - Jan 2025",

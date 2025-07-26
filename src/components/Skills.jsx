@@ -37,11 +37,10 @@ ErrorBoundary.propTypes = {
   children: PropTypes.node
 };
 
-// DevIcon URL helper
-const deviconUrl = (name, type = 'original') => 
-  `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${name}/${name}-${type}.svg`;
+// ...removed unused deviconUrl...
 
 // Skill categories and their colors
+import { useMemo, memo, Suspense } from 'react';
 const categories = [
   { id: 'all', name: 'All', color: '#ffcd00' },
   { id: 'frontend', name: 'Frontend', color: '#38bdf8' },
@@ -58,7 +57,7 @@ const allSkills = [
   { 
     name: 'React', 
     category: 'frontend',
-    icon: deviconUrl('react'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
     proficiency: 90,
     description: 'JavaScript library for building user interfaces with reusable UI components.',
     related: ['Next.js', 'Redux', 'React Router']
@@ -66,7 +65,7 @@ const allSkills = [
   { 
     name: 'JavaScript', 
     category: 'language',
-    icon: deviconUrl('javascript'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg',
     proficiency: 92,
     description: 'High-level programming language that follows the ECMAScript standard.',
     related: ['TypeScript', 'Node.js', 'ES6+'] 
@@ -74,7 +73,7 @@ const allSkills = [
   { 
     name: 'HTML5', 
     category: 'frontend',
-    icon: deviconUrl('html5'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg',
     proficiency: 95,
     description: 'Latest version of the Hypertext Markup Language for structuring web content.',
     related: ['CSS3', 'Semantic HTML', 'Web Accessibility'] 
@@ -82,7 +81,7 @@ const allSkills = [
   { 
     name: 'CSS3', 
     category: 'frontend',
-    icon: deviconUrl('css3'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg',
     proficiency: 88,
     description: 'Style sheet language used for describing the presentation of a document.',
     related: ['SASS', 'Tailwind CSS', 'Responsive Design'] 
@@ -90,7 +89,7 @@ const allSkills = [
   { 
     name: 'TypeScript', 
     category: 'language',
-    icon: deviconUrl('typescript'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
     proficiency: 82,
     description: 'Strongly typed programming language that builds on JavaScript.',
     related: ['JavaScript', 'Angular', 'Type Systems'] 
@@ -98,7 +97,7 @@ const allSkills = [
   { 
     name: 'Node.js', 
     category: 'backend',
-    icon: deviconUrl('nodejs', 'original'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg',
     proficiency: 85,
     description: 'JavaScript runtime built on Chrome\'s V8 JavaScript engine.',
     related: ['Express', 'REST APIs', 'NPM'] 
@@ -106,7 +105,7 @@ const allSkills = [
   { 
     name: 'MongoDB', 
     category: 'database',
-    icon: deviconUrl('mongodb', 'original'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg',
     proficiency: 80,
     description: 'NoSQL database program using JSON-like documents with schema.',
     related: ['Mongoose', 'Atlas', 'NoSQL'] 
@@ -114,7 +113,7 @@ const allSkills = [
   { 
     name: 'Express', 
     category: 'backend',
-    icon: deviconUrl('express', 'original'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg',
     proficiency: 84,
     description: 'Web application framework for Node.js designed for building web applications and APIs.',
     related: ['Node.js', 'REST APIs', 'Middleware'] 
@@ -122,7 +121,7 @@ const allSkills = [
   { 
     name: 'Tailwind CSS', 
     category: 'frontend',
-    icon: deviconUrl('tailwindcss', 'plain'), 
+    icon: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="%2338bdf8" d="M14.5 20.5c2.5-5.5 6.5-8.5 12-8.5c6.5 0 10.5 3.5 12 10.5c-2.5-5.5-6.5-8.5-12-8.5c-6.5 0-10.5 3.5-12 10.5zm-8 7c2.5-5.5 6.5-8.5 12-8.5c6.5 0 10.5 3.5 12 10.5c-2.5-5.5-6.5-8.5-12-8.5c-6.5 0-10.5 3.5-12 10.5z"/></svg>',
     proficiency: 88,
     description: 'Utility-first CSS framework for rapidly building custom user interfaces.',
     related: ['CSS', 'Responsive Design', 'UI Development'] 
@@ -130,7 +129,7 @@ const allSkills = [
   { 
     name: 'Git', 
     category: 'devops',
-    icon: deviconUrl('git', 'original'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg',
     proficiency: 86,
     description: 'Distributed version control system for tracking changes in source code.',
     related: ['GitHub', 'GitFlow', 'Version Control'] 
@@ -138,7 +137,7 @@ const allSkills = [
   { 
     name: 'Next.js', 
     category: 'frontend',
-    icon: deviconUrl('nextjs', 'original'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
     proficiency: 78,
     description: 'React framework that enables server-side rendering and static site generation.',
     related: ['React', 'Server-Side Rendering', 'Static Site Generation'] 
@@ -146,7 +145,7 @@ const allSkills = [
   { 
     name: 'Redux', 
     category: 'frontend',
-    icon: deviconUrl('redux', 'original'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redux/redux-original.svg',
     proficiency: 76,
     description: 'State management library for JavaScript applications.',
     related: ['React', 'State Management', 'React Context'] 
@@ -154,7 +153,7 @@ const allSkills = [
   { 
     name: 'SASS', 
     category: 'frontend',
-    icon: deviconUrl('sass', 'original'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sass/sass-original.svg',
     proficiency: 82,
     description: 'CSS preprocessor scripting language that is interpreted or compiled into CSS.',
     related: ['CSS', 'Preprocessors', 'BEM'] 
@@ -162,7 +161,7 @@ const allSkills = [
   { 
     name: 'Firebase', 
     category: 'backend',
-    icon: deviconUrl('firebase', 'plain'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-plain.svg',
     proficiency: 79,
     description: 'Platform for creating mobile and web applications with tools and infrastructure.',
     related: ['Authentication', 'Cloud Firestore', 'Real-time Database'] 
@@ -170,7 +169,7 @@ const allSkills = [
   { 
     name: 'Figma', 
     category: 'design',
-    icon: deviconUrl('figma', 'original'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg',
     proficiency: 75,
     description: 'Cloud-based design tool for collaborative interface design.',
     related: ['UI Design', 'Prototyping', 'Design Systems'] 
@@ -178,7 +177,7 @@ const allSkills = [
   { 
     name: 'Docker', 
     category: 'devops',
-    icon: deviconUrl('docker', 'original'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg',
     proficiency: 70,
     description: 'Platform for developing, shipping, and running applications in containers.',
     related: ['Containerization', 'CI/CD', 'Kubernetes'] 
@@ -202,7 +201,7 @@ const allSkills = [
   { 
     name: 'Blender', 
     category: 'design',
-    icon: deviconUrl('blender', 'original'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg',
     proficiency: 65,
     description: 'Free and open-source 3D creation suite supporting the entire 3D pipeline.',
     related: ['3D Modeling', '3D Animation', 'Rendering'] 
@@ -226,7 +225,7 @@ const allSkills = [
   { 
     name: 'SQL', 
     category: 'database',
-    icon: deviconUrl('mysql', 'original'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg',
     proficiency: 78,
     description: 'Standard language for storing, manipulating and retrieving data in relational databases.',
     related: ['MySQL', 'PostgreSQL', 'Database Design'] 
@@ -234,7 +233,7 @@ const allSkills = [
   { 
     name: 'Axios', 
     category: 'frontend',
-    icon: 'https://axios-http.com/assets/logo.svg', 
+    icon: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="%2338bdf8"/><path d="M10 22l6-12v7h6l-6 12v-7z" fill="white"/></svg>',
     proficiency: 88,
     description: 'Promise-based HTTP client for the browser and Node.js with an easy-to-use API.',
     related: ['API Integration', 'Data Fetching', 'REST Clients'] 
@@ -250,7 +249,7 @@ const allSkills = [
   { 
     name: 'ESLint', 
     category: 'tools',
-    icon: deviconUrl('eslint', 'original'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/eslint/eslint-original.svg',
     proficiency: 85,
     description: 'Static analysis tool for identifying problematic patterns in JavaScript code.',
     related: ['Code Quality', 'Linting', 'JavaScript Standards'] 
@@ -258,7 +257,7 @@ const allSkills = [
   { 
     name: 'Redis', 
     category: 'database',
-    icon: deviconUrl('redis', 'original'), 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redis/redis-original.svg',
     proficiency: 72,
     description: 'In-memory data structure store used as database, cache, and message broker.',
     related: ['Caching', 'Session Storage', 'Real-time Applications'] 
@@ -266,10 +265,19 @@ const allSkills = [
   { 
     name: 'WebSocket', 
     category: 'backend',
-    icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/websocket.svg', 
+    icon: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="%23a78bfa"/><path d="M10 16a6 6 0 0 1 12 0" stroke="white" stroke-width="2" fill="none"/><circle cx="16" cy="16" r="2" fill="white"/></svg>',
     proficiency: 78,
     description: 'Protocol for real-time, bidirectional communication between client and server.',
     related: ['Socket.io', 'Real-time Apps', 'Chat Applications'] 
+  },
+  // ...existing skills...
+  {
+    name: 'Logo',
+    category: 'tools',
+    icon: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="%23ffcd00"/><text x="16" y="21" text-anchor="middle" font-size="12" fill="black" font-family="Arial">LOGO</text></svg>',
+    proficiency: 100,
+    description: 'Portfolio logo placeholder.',
+    related: ['Branding', 'Identity']
   },
   { 
     name: 'Clerk', 
@@ -290,7 +298,7 @@ const allSkills = [
   { 
     name: 'Thunder Client', 
     category: 'tools',
-    icon: 'https://github.com/rangav/thunder-client-support/raw/master/images/thunder-client.png', 
+    icon: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><g><circle cx="16" cy="16" r="16" fill="%23818cf8"/><path d="M10 22l6-12v7h6l-6 12v-7z" fill="white"/></g></svg>',
     proficiency: 88,
     description: 'Lightweight REST API client for VS Code with intuitive interface.',
     related: ['API Testing', 'REST Client', 'VS Code Extension'] 
@@ -343,9 +351,8 @@ function hexToRgb(hex) {
 }
 
 // Skill Card Component
-const SkillCard = ({ skill, onClick }) => {
+const SkillCard = memo(function SkillCard({ skill, onClick }) {
   const categoryColor = categories.find(c => c.id === skill.category)?.color || '#ffffff';
-  
   return (
     <motion.div 
       whileHover={{ scale: 1.05, boxShadow: `0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 0 10px rgba(${hexToRgb(categoryColor)}, 0.3)` }}
@@ -358,7 +365,6 @@ const SkillCard = ({ skill, onClick }) => {
         className="absolute top-0 left-0 h-1 w-full transform origin-left transition-all duration-300 group-hover:h-full group-hover:opacity-10"
         style={{ backgroundColor: categoryColor }}
       ></div>
-      
       <div className="flex items-center mb-4">
         <div className="p-2 rounded-lg mr-3" style={{ backgroundColor: `${categoryColor}20` }}>
           <img 
@@ -366,6 +372,7 @@ const SkillCard = ({ skill, onClick }) => {
             alt={skill.name} 
             className="w-10 h-10 object-contain" 
             loading="lazy"
+            decoding="async"
             onError={(e) => {
               e.target.src = 'https://img.icons8.com/ios/50/code--v1.png';
             }}
@@ -381,9 +388,7 @@ const SkillCard = ({ skill, onClick }) => {
           </span>
         </div>
       </div>
-      
       <p className="mt-4 text-dark-200 line-clamp-2 text-sm">{skill.description}</p>
-      
       <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -391,7 +396,7 @@ const SkillCard = ({ skill, onClick }) => {
       </div>
     </motion.div>
   );
-};
+});
 
 SkillCard.propTypes = {
   skill: PropTypes.object.isRequired,
@@ -399,11 +404,9 @@ SkillCard.propTypes = {
 };
 
 // Detail Modal Component
-const SkillDetailModal = ({ skill, onClose }) => {
+const SkillDetailModal = memo(function SkillDetailModal({ skill, onClose }) {
   if (!skill) return null;
-  
   const category = categories.find(c => c.id === skill.category);
-  
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -427,7 +430,6 @@ const SkillDetailModal = ({ skill, onClose }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        
         <div className="flex items-center">
           <div 
             className="p-3 rounded-lg mr-4" 
@@ -438,12 +440,12 @@ const SkillDetailModal = ({ skill, onClose }) => {
               alt={skill.name} 
               className="w-12 h-12 object-contain" 
               loading="lazy"
+              decoding="async"
               onError={(e) => {
                 e.target.src = 'https://img.icons8.com/ios/50/code--v1.png';
               }}
             />
           </div>
-          
           <div>
             <h2 className="text-2xl font-bold text-gray-100">{skill.name}</h2>
             <span 
@@ -457,10 +459,8 @@ const SkillDetailModal = ({ skill, onClose }) => {
             </span>
           </div>
         </div>
-        
         <div className="mt-6">
           <p className="text-dark-100 leading-relaxed">{skill.description}</p>
-          
           <div className="mt-6">
             <h3 className="text-sm text-dark-200 mb-2">Related Skills</h3>
             <div className="flex flex-wrap gap-2">
@@ -478,7 +478,7 @@ const SkillDetailModal = ({ skill, onClose }) => {
       </motion.div>
     </motion.div>
   );
-};
+});
 
 SkillDetailModal.propTypes = {
   skill: PropTypes.object,
@@ -489,7 +489,10 @@ SkillDetailModal.propTypes = {
 const Skills = () => {
   const [selectedSkill, setSelectedSkill] = useState(null);
   const containerRef = useRef(null);
-  
+  // Memoize skills
+  const memoSkills = useMemo(() => allSkills, []);
+  // Memoize click handler
+  const handleSkillClick = useMemo(() => (skill) => setSelectedSkill(skill), []);
   return (
     <ErrorBoundary>
       <div ref={containerRef} className="container mx-auto px-4">
@@ -500,13 +503,12 @@ const Skills = () => {
             Here&apos;s an overview of my technical skills and expertise.
           </p>
         </div>
-        
         {/* Skills Grid */}
         <motion.div 
           layout
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
-          {allSkills.map((skill, index) => (
+          {memoSkills.map((skill, index) => (
             <motion.div
               key={skill.name}
               initial={{ opacity: 0, y: 20 }}
@@ -516,19 +518,20 @@ const Skills = () => {
             >
               <SkillCard 
                 skill={skill} 
-                onClick={(skill) => setSelectedSkill(skill)}
+                onClick={handleSkillClick}
               />
             </motion.div>
           ))}
         </motion.div>
-        
         {/* Skill Detail Modal */}
-        {selectedSkill && (
-          <SkillDetailModal 
-            skill={selectedSkill} 
-            onClose={() => setSelectedSkill(null)} 
-          />
-        )}
+        <Suspense fallback={null}>
+          {selectedSkill && (
+            <SkillDetailModal 
+              skill={selectedSkill} 
+              onClose={() => setSelectedSkill(null)} 
+            />
+          )}
+        </Suspense>
       </div>
     </ErrorBoundary>
   );
