@@ -8,7 +8,6 @@
 @layer base {
   html {
     font-family: 'Poppins', sans-serif;
-    user-select: none;
     color-scheme: dark;
   }
   
@@ -133,4 +132,22 @@
   100% {
     background-position: 0% 50%;
   }
+}
+
+footer {
+  min-height: 48px; /* Reserve space for footer to reduce CLS */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }

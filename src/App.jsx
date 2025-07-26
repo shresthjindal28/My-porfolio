@@ -1,16 +1,16 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { AnimatePresence, motion } from 'framer-motion';
-import Navbar from './components/Navbar';
-import { useLenis } from './hooks/useLenis';
+import React, { Suspense, lazy, useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import { AnimatePresence, motion } from "framer-motion";
+import Navbar from "./components/Navbar";
+import { useLenis } from "./hooks/useLenis";
 
 // Lazy load components
-const Home = lazy(() => import('./components/Home'));
-const Skills = lazy(() => import('./components/Skills'));
-const Project = lazy(() => import('./components/Project'));
-const Work = lazy(() => import('./components/Work'));
-const Contact = lazy(() => import('./components/Contact'));
-const Model3D = lazy(() => import('./components/Model3D'));
+const Home = lazy(() => import("./components/Home"));
+const Skills = lazy(() => import("./components/Skills"));
+const Project = lazy(() => import("./components/Project"));
+const Work = lazy(() => import("./components/Work"));
+const Contact = lazy(() => import("./components/Contact"));
+const Model3D = lazy(() => import("./components/Model3D"));
 
 // Main loading screen
 const LoadingScreen = () => (
@@ -31,11 +31,10 @@ const SectionLoader = () => (
   </div>
 );
 
-
 const Section = ({ id, className, children }) => (
   <motion.section
     id={id}
-    className={`py-16 md:py-24 w-full ${className || ''}`}
+    className={`py-16 md:py-24 w-full ${className || ""}`}
     initial={{ opacity: 0 }}
     whileInView={{ opacity: 1 }}
     viewport={{ once: true }}
@@ -48,7 +47,7 @@ const Section = ({ id, className, children }) => (
 Section.propTypes = {
   id: PropTypes.string,
   className: PropTypes.string,
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 // Error boundary for 3D model
@@ -75,12 +74,12 @@ class Model3DErrorBoundary extends React.Component {
 }
 
 Model3DErrorBoundary.propTypes = {
-  children: PropTypes.node
-}
+  children: PropTypes.node,
+};
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Initialize Lenis smooth scroll
   useLenis();
 
@@ -89,7 +88,7 @@ const App = () => {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -107,42 +106,44 @@ const App = () => {
               </Suspense>
             </Model3DErrorBoundary>
           </div>
-          
+
           {/* Overlay gradient to improve contrast with background */}
           <div className="fixed inset-0 z-0 bg-gradient-to-b from-dark-800/80 to-dark-900/90 pointer-events-none" />
-          
+
           {/* Main content */}
           <div className="relative z-10">
             <Navbar />
-            
+
             <AnimatePresence mode="wait">
               <Suspense fallback={<SectionLoader />}>
                 <Section id="home">
                   <Home />
                 </Section>
-                
+
                 <Section id="skills" className="bg-dark-900/60">
                   <Skills />
                 </Section>
-                
+
                 <Section id="work">
                   <Work />
                 </Section>
-                
+
                 <Section id="projects" className="bg-dark-900/60">
                   <Project />
                 </Section>
-                
+
                 <Section id="contact">
                   <Contact />
                 </Section>
+                {/* Footer */}
+                <footer className="py-8 text-center text-dark-300 text-sm">
+                  <p>
+                    © {new Date().getFullYear()} Shresth Jindal. All rights
+                    reserved.
+                  </p>
+                </footer>
               </Suspense>
             </AnimatePresence>
-            
-            {/* Footer */}
-            <footer className="py-8 text-center text-dark-300 text-sm">
-              <p>© {new Date().getFullYear()} Shresth Jindal. All rights reserved.</p>
-            </footer>
           </div>
         </div>
       )}
