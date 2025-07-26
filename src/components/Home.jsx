@@ -1,5 +1,5 @@
 // src/components/Home.jsx
-import  { useRef, Suspense } from "react";
+import  { useRef, Suspense, useState, useEffect } from "react";
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import Home3DModel from './Home3DModel';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -26,7 +26,14 @@ const Home = () => {
   const y1 = useTransform(scrollYProgress, [0, 1], [0, 300]);
   const y2 = useTransform(scrollYProgress, [0, 1], [0, 150]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  
+
+  // Delay 3D model render
+  const [showModel, setShowModel] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setShowModel(true), 3000); // 1 second delay
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div 
       ref={containerRef} 
@@ -49,9 +56,13 @@ const Home = () => {
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 blur-md animate-pulse" />
             <div className="absolute inset-3 rounded-full bg-dark-800 border border-dark-600" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Suspense fallback={<ModelFallback />}>
-                <Home3DModel />
-              </Suspense>
+              {showModel ? (
+                <Suspense fallback={<ModelFallback />}>
+                  <Home3DModel />
+                </Suspense>
+              ) : (
+                <ModelFallback />
+              )}
             </div>
           </div>
         </motion.div>
