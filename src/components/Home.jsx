@@ -1,8 +1,7 @@
 // src/components/Home.jsx
-import  { useRef } from "react";
+import  { useRef, Suspense } from "react";
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
-import { lazy, Suspense } from 'react';
-const Home3DModel = lazy(() => import('./Home3DModel'));
+import Home3DModel from './Home3DModel';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-scroll';
 
