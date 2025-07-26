@@ -8,7 +8,7 @@ const projects = [
     title: "Employee Management System",
     description:
       "A comprehensive system for managing employee data, attendance, and performance tracking with a user-friendly interface.",
-    image: "/images/employee-management.jpg", // Local fallback image
+    image: "/images/employee-management.webp", // Local fallback image (use WebP for optimization)
     imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
     github: "https://github.com/shresthjindal28/Employee-Management-System",
     tags: ["React", "Node.js", "MongoDB"],
@@ -19,7 +19,7 @@ const projects = [
     title: "Uber Clone",
     description:
       "A ride-sharing application clone featuring real-time tracking, payment integration, and driver-passenger matching.",
-    image: "/images/uber-clone.jpg", // Local fallback image
+    image: "/images/uber-clone.webp", // Local fallback image (use WebP for optimization)
     imageUrl: "https://images.unsplash.com/photo-1657947953120-6e5201f3b3ed?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     github: "https://github.com/shresthjindal28/Uber",
     tags: ["React Native", "Firebase", "Maps API"],
@@ -30,7 +30,7 @@ const projects = [
     title: "Restaurant Near Me",
     description:
       "Location-based restaurant finder with filters, reviews, and real-time availability updates.",
-    image: "/images/restaurant.jpg", // Local fallback image
+    image: "/images/restaurant.webp", // Local fallback image (use WebP for optimization)
     imageUrl: "https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
     github: "https://github.com/A-netrunner/Food-Shopping",
     tags: ["JavaScript", "Google Maps API", "Yelp API"],
@@ -130,7 +130,7 @@ const projects = [
 
 
 // Memoized Project Card to prevent unnecessary re-renders
-const ProjectCard = memo(function ProjectCard({ project, openProjectDetails, imageLoading, handleImageLoad, handleImageError, projectsRef }) {
+const ProjectCard = memo(function ProjectCard({ project, openProjectDetails, imageLoading, projectsRef }) {
   return (
     <div
       key={project.id}
@@ -170,16 +170,16 @@ const ProjectCard = memo(function ProjectCard({ project, openProjectDetails, ima
             </div>
           )}
           {/* Image with fallback */}
-          <img
-            src={project.imageUrl || project.image}
-            alt={project.title}
-            className={`h-full w-full object-cover transition-all duration-1000 ease-in-out 
-            group-hover:scale-110 group-hover:rotate-3 ${imageLoading[project.id] ? 'opacity-0' : 'opacity-100'}`}
-            loading="lazy"
-            onLoad={() => handleImageLoad(project.id, project.imageUrl)}
-            onError={() => handleImageError(project.id)}
-            style={{ objectFit: 'cover', objectPosition: 'center' }}
-          />
+        <img
+          src={project.imageUrl || project.image}
+          alt={project.title}
+          className="w-full h-48 object-cover rounded-lg shadow-md mb-4"
+          loading="lazy"
+          onError={e => {
+            e.target.onerror = null;
+            e.target.src = project.image;
+          }}
+        />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-70 group-hover:opacity-60 transition-all duration-500"></div>
           {/* Decorative Elements */}
           <div className="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-white/20 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:translate-x-1 group-hover:translate-y-1"></div>
@@ -242,8 +242,6 @@ ProjectCard.propTypes = {
   project: PropTypes.object.isRequired,
   openProjectDetails: PropTypes.func.isRequired,
   imageLoading: PropTypes.object.isRequired,
-  handleImageLoad: PropTypes.func.isRequired,
-  handleImageError: PropTypes.func.isRequired,
   projectsRef: PropTypes.object.isRequired
 };
 
@@ -252,35 +250,11 @@ const ProjectDisplay = () => {
   const [error] = useState(false);
   const [currentProject, setCurrentProject] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [loadedImages, setLoadedImages] = useState({});
   const [imageLoading, setImageLoading] = useState({});
   const sectionRef = useRef(null);
   const projectsRef = useRef([]);
   const titleRef = useRef(null);
 
-  // Handle image loading
-  const handleImageLoad = (projectId, imageUrl) => {
-    setLoadedImages(prev => ({
-      ...prev,
-      [projectId]: imageUrl
-    }));
-    setImageLoading(prev => ({
-      ...prev,
-      [projectId]: false
-    }));
-  };
-
-  // Handle image error
-  const handleImageError = (projectId) => {
-    setImageLoading(prev => ({
-      ...prev,
-      [projectId]: false
-    }));
-    setLoadedImages(prev => ({
-      ...prev,
-      [projectId]: projects.find(p => p.id === projectId)?.image
-    }));
-  };
 
   useEffect(() => {
     const initialLoadingState = {};
@@ -292,10 +266,6 @@ const ProjectDisplay = () => {
 
   useEffect(() => {
     projectsRef.current = projectsRef.current.slice(0, projects.length);
-  }, []);
-
-  useEffect(() => {
-    // Removed isMobile state and handler as it was unused
   }, []);
 
   const openProjectDetails = (project) => {
@@ -349,8 +319,6 @@ const ProjectDisplay = () => {
               project={project}
               openProjectDetails={openProjectDetails}
               imageLoading={imageLoading}
-              handleImageLoad={handleImageLoad}
-              handleImageError={handleImageError}
               projectsRef={projectsRef}
             />
           ))}
@@ -386,7 +354,7 @@ const ProjectDisplay = () => {
               </div>
               
               <img 
-                src={loadedImages[currentProject.id] || currentProject.imageUrl || currentProject.image} 
+                src={currentProject.imageUrl || currentProject.image} 
                 alt={currentProject.title} 
                 className="w-full h-full object-cover"
                 onLoad={(e) => e.target.previousElementSibling?.classList.add('hidden')}
