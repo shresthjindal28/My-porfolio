@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/Navbar";
@@ -10,7 +10,6 @@ const Skills = lazy(() => import("./components/Skills"));
 const Contact = lazy(() => import("./components/Contact"));
 const Project = lazy(() => import("./components/Project"));
 const Work = lazy(() => import("./components/Work"));
-const Model3D = lazy(() => import("./components/Model3D"));
 
 // Component loading spinner
 const SectionLoader = () => (
@@ -69,12 +68,25 @@ const App = () => {
   // Initialize Lenis smooth scroll
   useLenis();
   const isDesktop = useIsDesktop();
+  const [Model3D, setModel3D] = useState(null);
+
+  useEffect(() => {
+    if (isDesktop) {
+      const loadModel = async () => {
+        const { default: ModelComponent } = await import(
+          "./components/Model3D"
+        );
+        setModel3D(() => ModelComponent);
+      };
+      loadModel();
+    }
+  }, [isDesktop]);
 
   return (
     <Suspense fallback={<SectionLoader />}>
       <div className="text-white min-h-screen relative w-full overflow-x-hidden bg-dark-800">
         {/* Background 3D model - only render on desktop */}
-        {isDesktop && (
+        {isDesktop && Model3D && (
         <div className="fixed inset-0 z-0 pointer-events-none">
           <Model3DErrorBoundary>
             <Suspense fallback={null}>
