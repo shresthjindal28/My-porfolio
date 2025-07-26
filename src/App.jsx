@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/Navbar";
 import { useLenis } from "./hooks/useLenis";
+import useIsDesktop from "./hooks/useIsDesktop";
 
 import Home from "./components/Home";
 import Skills from "./components/Skills";
@@ -10,7 +11,6 @@ import Contact from "./components/Contact";
 const Project = lazy(() => import("./components/Project"));
 const Work = lazy(() => import("./components/Work"));
 const Model3D = lazy(() => import("./components/Model3D"));
-
 
 // Component loading spinner
 const SectionLoader = () => (
@@ -68,18 +68,21 @@ Model3DErrorBoundary.propTypes = {
 const App = () => {
   // Initialize Lenis smooth scroll
   useLenis();
+  const isDesktop = useIsDesktop();
 
   return (
     <Suspense fallback={<SectionLoader />}>
       <div className="text-white min-h-screen relative w-full overflow-x-hidden bg-dark-800">
         {/* Background 3D model - only render on desktop */}
-        <div className="fixed inset-0 z-0 pointer-events-none hidden lg:block">
+        {isDesktop && (
+        <div className="fixed inset-0 z-0 pointer-events-none">
           <Model3DErrorBoundary>
             <Suspense fallback={null}>
               <Model3D />
             </Suspense>
           </Model3DErrorBoundary>
         </div>
+        )}
 
         {/* Overlay gradient to improve contrast with background */}
         <div className="fixed inset-0 z-0 bg-gradient-to-b from-dark-800/80 to-dark-900/90 pointer-events-none" />
